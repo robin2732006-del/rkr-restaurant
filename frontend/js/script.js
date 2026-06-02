@@ -1667,7 +1667,7 @@ async function initMenu() {
      TRY BACKEND FIRST — fall back to static menu
      ---------------------------------------------------------- */
   try {
-    const response = await fetch('http://localhost:5000/api/foods');
+    const response = await fetch('https://rkr-restaurant-backend.onrender.com/api/foods');
 
     if (!response.ok) throw new Error('Backend unavailable');
 
