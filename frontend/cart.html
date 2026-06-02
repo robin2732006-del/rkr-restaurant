@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- META -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- TITLE -->
+    <title>RKR Restaurant | Shopping Cart</title>
+
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- FONT AWESOME -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/cart.css" />
+
+</head>
+
+<body>
+
+    <!-- ===== PRELOADER ===== -->
+    <div class="preloader" id="preloader">
+      <div class="preloader-inner">
+        <div class="pl-logo">RKR</div>
+        <div class="pl-bar"><div class="pl-fill"></div></div>
+        <p class="pl-tagline">Crafting your experience…</p>
+      </div>
+    </div>
+
+
+    <!-- ===== FLOATING HEADER ===== -->
+    <header class="header" id="header">
+      <nav class="navbar container">
+
+        <a href="index.html#home" class="logo">
+          <span class="logo-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
+          <span class="logo-text">RKR<em>Restaurant</em></span>
+        </a>
+
+        <!-- BACKDROP -->
+        <div class="nav-backdrop" id="navBackdrop"></div>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="index.html#home" class="nav-link">Home</a></li>
+          <li><a href="index.html#categories" class="nav-link">Categories</a></li>
+          <li><a href="index.html#offers" class="nav-link">Offers</a></li>
+          <li><a href="index.html#menu" class="nav-link">Menu</a></li>
+          <li><a href="index.html#about" class="nav-link">About</a></li>
+          <li><a href="index.html#team" class="nav-link">Chefs</a></li>
+          <li><a href="index.html#reviews" class="nav-link">Reviews</a></li>
+          <li><a href="index.html#gallery" class="nav-link">Gallery</a></li>
+          <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+          <!-- mobile auth -->
+          <li class="mobile-only"><a href="login.html" class="mob-btn mob-login">Login</a></li>
+          <li class="mobile-only"><a href="signup.html" class="mob-btn mob-signup">Sign Up</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <a href="login.html"  class="ghost-btn">Login</a>
+          <a href="signup.html" class="fill-btn">Sign Up</a>
+          <a href="cart.html"   class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </a>
+          <button class="hamburger" id="hamburger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+
+      </nav>
+    </header>
+
+    <!-- =========================
+         CART SECTION
+    ========================== -->
+
+    <section class="cart-section" style="padding-top: 120px;">
+
+        <div class="cart-container">
+
+            <!-- =========================
+                 HEADER
+            ========================== -->
+
+            <div class="cart-header">
+
+                <div class="cart-header-content">
+
+                    <h1>
+                        Your Cart
+                        <span>🛒</span>
+                    </h1>
+
+                    <p>
+                        Review your selected delicious dishes
+                    </p>
+
+                </div>
+
+                <button
+                    class="clear-cart-btn"
+                    onclick="clearCart()"
+                >
+                    <i class="fa-solid fa-trash"></i>
+                    Clear Cart
+                </button>
+
+            </div>
+
+            <!-- =========================
+                 CART ITEMS
+            ========================== -->
+
+            <div
+                id="cart-items"
+                class="cart-items"
+            ></div>
+
+            <!-- =========================
+                 EMPTY CART
+            ========================== -->
+
+            <div
+                id="empty-cart"
+                class="empty-cart"
+            >
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+
+                <h2>Your Cart Is Empty</h2>
+
+                <p>
+                    Looks like you haven't added anything yet.
+                </p>
+
+                <a
+                    href="index.html"
+                    class="shop-btn"
+                >
+                    <i class="fa-solid fa-utensils"></i>
+                    Browse Menu
+                </a>
+
+            </div>
+
+            <!-- =========================
+                 CART SUMMARY
+            ========================== -->
+
+            <div class="cart-summary">
+
+                <h3>
+                    Order Summary
+                </h3>
+
+                <div class="summary-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <span id="subtotal">
+                        ₹0
+                    </span>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>
+                        Delivery Fee
+                    </span>
+
+                    <span>
+                        ₹50
+                    </span>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>
+                        GST (5%)
+                    </span>
+
+                    <span id="gst">
+                        ₹0
+                    </span>
+
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row total-row">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span id="total">
+                        ₹0
+                    </span>
+
+                </div>
+
+                <!-- CHECKOUT BUTTON -->
+
+                <button
+                    class="checkout-btn"
+                    onclick="checkout()"
+                >
+
+                    <i class="fa-solid fa-credit-card"></i>
+
+                    Proceed To Checkout
+
+                </button>
+
+                <!-- CONTINUE SHOPPING -->
+
+                <a
+                    href="index.html"
+                    class="continue-btn"
+                >
+                    Continue Shopping
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+
+      <div class="footer-top">
+        <div class="container footer-grid">
+
+          <!-- BRAND -->
+          <div class="f-col f-brand">
+
+            <a href="index.html#home" class="logo">
+              <span class="logo-icon">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+              </span>
+
+              <span class="logo-text">
+                RKR<em>Restaurant</em>
+              </span>
+            </a>
+
+            <p>
+              Premium flavours, lightning delivery,
+              and unforgettable dining experiences.
+              Chennai's favourite restaurant since 2018.
+            </p>
+
+            <!-- WORKING SOCIAL ICONS -->
+            <div class="f-socials">
+
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="Facebook"
+              >
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="Instagram"
+              >
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="YouTube"
+              >
+                <i class="fa-brands fa-youtube"></i>
+              </a>
+
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="Twitter"
+              >
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+
+            </div>
+          </div>
+
+          <!-- NAVIGATION -->
+          <div class="f-col">
+
+            <h4>Navigate</h4>
+
+            <ul>
+
+              <li>
+                <a href="index.html#home">Home</a>
+              </li>
+
+              <li>
+                <a href="index.html#menu">Menu</a>
+              </li>
+
+              <li>
+                <a href="index.html#offers">Offers</a>
+              </li>
+
+              <li>
+                <a href="index.html#about">About</a>
+              </li>
+
+              <li>
+                <a href="index.html#contact">Contact</a>
+              </li>
+
+            </ul>
+
+          </div>
+
+          <!-- OPENING HOURS -->
+          <div class="f-col">
+
+            <h4>Opening Hours</h4>
+
+            <div class="f-hours">
+
+              <span>Mon – Fri</span>
+              <span>10:00 AM – 11:00 PM</span>
+
+              <span>Sat – Sun</span>
+              <span>9:00 AM – 11:30 PM</span>
+
+              <span>Public Holidays</span>
+              <span>10:00 AM – 10:00 PM</span>
+
+            </div>
+
+          </div>
+
+          <!-- NEWSLETTER -->
+          <div class="f-col">
+
+            <h4>Newsletter</h4>
+
+            <p>
+              Subscribe to receive exclusive offers
+              and latest updates.
+            </p>
+
+            <div class="f-newsletter">
+
+              <input
+                type="email"
+                placeholder="your@email.com"
+                id="newsletterInput"
+              />
+
+              <button
+                id="newsletterBtn"
+                aria-label="Subscribe"
+              >
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FOOTER BOTTOM -->
+      <div class="footer-bottom">
+
+        <div class="container footer-bottom-wrap">
+
+          <p>
+            © 2026 RKR Restaurant —
+            All Rights Reserved.
+            Made with
+            <i
+              class="fa-solid fa-heart"
+              style="color:#ef4444"
+            ></i>
+            in Chennai.
+          </p>
+
+          <!-- WORKING LEGAL LINKS -->
+          <div class="f-legal">
+
+            <a href="privacy.html">
+              Privacy Policy
+            </a>
+
+            <a href="terms.html">
+              Terms of Use
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script src="js/script.js"></script>
+    <script src="js/cart.js"></script>
+
+</body>
+</html>

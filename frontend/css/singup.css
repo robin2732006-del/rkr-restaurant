@@ -1,0 +1,381 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --card-bg: rgba(12, 15, 24, 0.85);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    --form-text-primary: #f4efe8;
+    --form-text-secondary: #b0bac8;
+    --form-input-bg: rgba(255, 255, 255, 0.04);
+    --form-input-border: rgba(255, 255, 255, 0.08);
+    --form-input-color: #ffffff;
+    --form-input-focus: rgba(12, 15, 24, 0.95);
+    --divider-bg: rgba(255, 255, 255, 0.1);
+    --social-btn-bg: rgba(255, 255, 255, 0.05);
+    --social-btn-hover: rgba(255, 255, 255, 0.12);
+    --body-bg-gradient: linear-gradient(rgba(0,0,0,0.76), rgba(0,0,0,0.76));
+}
+
+body.light {
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.06);
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --form-text-primary: #111111;
+    --form-text-secondary: #777777;
+    --form-input-bg: #fafafa;
+    --form-input-border: #e4e4e4;
+    --form-input-color: #222222;
+    --form-input-focus: #ffffff;
+    --divider-bg: #e2e2e2;
+    --social-btn-bg: #f7f7f7;
+    --social-btn-hover: #fff3e0;
+    --body-bg-gradient: linear-gradient(rgba(255,255,255,0.78), rgba(255,255,255,0.78));
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:
+    var(--body-bg-gradient),
+    url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600');
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+    transition: background 0.4s ease;
+}
+
+.signup-page{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex:1;
+    width:100%;
+    padding:120px 14px 60px;
+}
+
+/* MAIN BOX */
+
+.signup-container{
+    width:560px;
+    max-width:100%;
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:18px;
+    overflow:hidden;
+    display:flex;
+    box-shadow:var(--card-shadow);
+    backdrop-filter:blur(20px);
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* LEFT SIDE */
+
+.signup-left{
+    width:35%;
+    background:
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200');
+    background-size:cover;
+    background-position:center;
+    padding:20px 14px;
+    display:flex;
+    align-items:center;
+}
+
+.left-content{
+    color:white;
+}
+
+.brand-tag{
+    display:inline-block;
+    padding:7px 12px;
+    background:rgba(255,255,255,0.15);
+    border-radius:20px;
+    font-size:11px;
+    margin-bottom:14px;
+}
+
+.left-content h1{
+    font-size:26px;
+    line-height:1.4;
+    margin-bottom:12px;
+    font-weight:700;
+}
+
+.left-content p{
+    font-size:13px;
+    line-height:1.7;
+    color:#f1f1f1;
+    margin-bottom:18px;
+}
+
+/* FEATURES */
+
+.feature-box{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.feature{
+    display:flex;
+    align-items:center;
+    font-size:13px;
+}
+
+.feature i{
+    width:32px;
+    height:32px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.15);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-right:10px;
+    color:#ff9800;
+    font-size:13px;
+}
+
+/* RIGHT SIDE */
+
+.signup-right{
+    width:65%;
+    padding:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* FORM */
+
+.signup-form{
+    width:100%;
+    max-width:260px;
+}
+
+.signup-form h2{
+    font-size:24px;
+    color:var(--form-text-primary);
+    margin-bottom:4px;
+    transition: color 0.4s ease;
+}
+
+.subtitle{
+    color:var(--form-text-secondary);
+    font-size:12px;
+    margin-bottom:12px;
+    transition: color 0.4s ease;
+}
+
+/* INPUT BOX */
+
+.input-box{
+    width:100%;
+    height:38px;
+    background:var(--form-input-bg);
+    border:1px solid var(--form-input-border);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    padding:0 12px;
+    margin-bottom:10px;
+    transition:0.3s;
+    position:relative;
+}
+
+.input-box:hover{
+    border-color:#ff9800;
+}
+
+.input-box:focus-within{
+    background:var(--form-input-focus);
+    border-color:#ff9800;
+    box-shadow:
+    0 0 8px rgba(255,152,0,0.15);
+}
+
+.input-box i{
+    color:#ff9800;
+    font-size:14px;
+    margin-right:8px;
+}
+
+.input-box input{
+    width:100%;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:14px;
+    color:var(--form-input-color);
+    transition: color 0.4s ease;
+}
+
+.input-box input::placeholder{
+    color:#999;
+}
+
+/* PASSWORD SHOW ICON */
+
+.password-toggle{
+    position:absolute;
+    right:12px;
+    cursor:pointer;
+    color:var(--form-text-secondary);
+    font-size:14px;
+    transition: color 0.4s ease;
+}
+
+/* CHECKBOX */
+
+.checkbox-box{
+    display:flex;
+    align-items:flex-start;
+    gap:6px;
+    margin-bottom:10px;
+    font-size:11px;
+    color:var(--form-text-secondary);
+    line-height:1.5;
+    transition: color 0.4s ease;
+}
+
+.checkbox-box input{
+    accent-color:#ff9800;
+}
+
+/* BUTTON */
+
+.signup-btn{
+    width:100%;
+    height:38px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(to right,#ff9800,#ff6f00);
+    color:white;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.signup-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:
+    0 8px 18px rgba(255,140,0,0.28);
+}
+
+/* DIVIDER */
+
+.divider{
+    text-align:center;
+    margin:10px 0;
+    color:var(--form-text-secondary);
+    position:relative;
+    font-size:11px;
+    transition: color 0.4s ease;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+    position:absolute;
+    width:24%;
+    height:1px;
+    background:var(--divider-bg);
+    top:50%;
+    transition: background 0.4s ease;
+}
+
+.divider::before{
+    left:0;
+}
+
+.divider::after{
+    right:0;
+}
+
+/* SOCIAL BUTTONS */
+
+.social-buttons{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+.social-btn{
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:10px;
+    background:var(--social-btn-bg);
+    color:var(--form-text-primary);
+    font-size:14px;
+    cursor:pointer;
+    transition:0.3s;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.social-btn:hover{
+    background:var(--social-btn-hover);
+    color:#ff9800;
+}
+
+/* BOTTOM */
+
+.bottom-text{
+    margin-top:10px;
+    text-align:center;
+    font-size:11px;
+    color:var(--form-text-secondary);
+    transition: color 0.4s ease;
+}
+
+.bottom-text a{
+    color:#ff9800;
+    text-decoration:none;
+    font-weight:600;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+    .signup-container{
+        flex-direction:column;
+        max-width:420px;
+        margin:0 auto;
+    }
+    .signup-left{
+        display:none;
+    }
+    .signup-right{
+        width:100%;
+        padding:30px 20px;
+    }
+    .signup-form{
+        max-width:100%;
+    }
+}
+
+@media(max-width:480px){
+    body{
+        padding:12px;
+    }
+    .signup-container{
+        border-radius:14px;
+    }
+    .signup-form h2{
+        font-size:24px;
+    }
+    .input-box{
+        height:40px;
+    }
+}

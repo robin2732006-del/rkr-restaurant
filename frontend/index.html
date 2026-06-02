@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RKR Restaurant | Premium Food Experience</title>
+  <meta name="description" content="RKR Restaurant — Premium dishes, fast delivery, unforgettable taste. Best restaurant in Chennai." />
+
+  <!-- PRECONNECT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- ICONS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ===== PRELOADER ===== -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="pl-logo">RKR</div>
+    <div class="pl-bar"><div class="pl-fill"></div></div>
+    <p class="pl-tagline">Crafting your experience…</p>
+  </div>
+</div>
+
+
+<!-- ===== FLOATING HEADER ===== -->
+<header class="header" id="header">
+  <nav class="navbar container">
+
+    <a href="#home" class="logo">
+      <span class="logo-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
+      <span class="logo-text">RKR<em>Restaurant</em></span>
+    </a>
+
+    <!-- BACKDROP -->
+    <div class="nav-backdrop" id="navBackdrop"></div>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="nav-link">Home</a></li>
+      <li><a href="#categories" class="nav-link">Categories</a></li>
+      <li><a href="#offers" class="nav-link">Offers</a></li>
+      <li><a href="#menu" class="nav-link">Menu</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#team" class="nav-link">Chefs</a></li>
+      <li><a href="#reviews" class="nav-link">Reviews</a></li>
+      <li><a href="#gallery" class="nav-link">Gallery</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+      <!-- mobile auth -->
+      <li class="mobile-only"><a href="login.html" class="mob-btn mob-login">Login</a></li>
+      <li class="mobile-only"><a href="signup.html" class="mob-btn mob-signup">Sign Up</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      <a href="login.html"  class="ghost-btn">Login</a>
+      <a href="signup.html" class="fill-btn">Sign Up</a>
+      <a href="cart.html"   class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-particles" id="heroParticles"></div>
+
+  <div class="container hero-grid">
+    <div class="hero-left">
+      <div class="hero-pill reveal-up">
+        <span class="pill-dot"></span>
+        Best Restaurant In Chennai
+      </div>
+
+      <h1 class="hero-title reveal-up delay-1">
+        Taste <em>the Art</em><br>of Fine Dining
+      </h1>
+
+      <p class="hero-sub reveal-up delay-2">
+        Crafted by professional chefs using the freshest ingredients —
+        delivered blazing fast, right to your door.
+      </p>
+
+      <div class="hero-cta reveal-up delay-3">
+        <a href="#menu" class="btn-primary"><i class="fa-solid fa-utensils"></i> Order Now</a>
+        <a href="#offers" class="btn-ghost"><i class="fa-solid fa-tag"></i> See Offers</a>
+      </div>
+
+      <div class="hero-stats reveal-up delay-4">
+        <div class="h-stat">
+          <span class="h-num" data-target="10000">0</span><sup>+</sup>
+          <p>Happy Customers</p>
+        </div>
+        <div class="h-divider"></div>
+        <div class="h-stat">
+          <span class="h-num" data-target="500">0</span><sup>+</sup>
+          <p>Dishes Served</p>
+        </div>
+        <div class="h-divider"></div>
+        <div class="h-stat">
+          <span class="h-num" data-target="4">0</span><sup>.9★</sup>
+          <p>Average Rating</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right reveal-right">
+      <div class="hero-img-frame">
+        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200" alt="Signature Burger" class="hero-img" />
+        <div class="hero-float-card fc-top">
+          <i class="fa-solid fa-star"></i>
+          <div><strong>4.9</strong><span>Top Rated</span></div>
+        </div>
+        <div class="hero-float-card fc-bot">
+          <i class="fa-solid fa-truck-fast"></i>
+          <div><strong>30 min</strong><span>Fast Delivery</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="#categories" class="scroll-hint">
+    <span>Scroll</span>
+    <i class="fa-solid fa-chevron-down"></i>
+  </a>
+</section>
+
+<!-- ===== SEARCH ===== -->
+<section class="search-section" id="search">
+  <div class="container">
+    <div class="search-card">
+      <div class="search-inner">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search dishes, categories…" autocomplete="off" />
+        <button class="search-clear" id="searchClear" aria-label="Clear"><i class="fa-solid fa-xmark"></i></button>
+        <button class="search-submit" id="searchBtn">Search</button>
+      </div>
+      <div class="search-tags">
+        <button class="stag" data-q="burger">🍔 Burgers</button>
+        <button class="stag" data-q="pizza">🍕 Pizza</button>
+        <button class="stag" data-q="chicken">🍗 Chicken</button>
+        <button class="stag" data-q="mojito">🥤 Drinks</button>
+        <button class="stag" data-q="">All</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="features-section" id="features">
+  <div class="container">
+    <div class="section-head reveal-up">
+      <span class="sec-chip">WHY CHOOSE US</span>
+      <h2>The RKR Difference</h2>
+      <p>Everything that makes us a cut above the rest</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card reveal-up delay-1">
+        <div class="feat-icon"><i class="fa-solid fa-leaf"></i></div>
+        <h3>Farm Fresh</h3>
+        <p>Sourced daily from trusted local farms. Every bite guaranteed fresh.</p>
+      </div>
+      <div class="feat-card reveal-up delay-2">
+        <div class="feat-icon"><i class="fa-solid fa-bolt"></i></div>
+        <h3>Lightning Delivery</h3>
+        <p>Your order reaches your door in 30 minutes or your next order is free.</p>
+      </div>
+      <div class="feat-card reveal-up delay-3">
+        <div class="feat-icon"><i class="fa-solid fa-trophy"></i></div>
+        <h3>Award Winning</h3>
+        <p>Recognised as Chennai's top restaurant 3 years running.</p>
+      </div>
+      <div class="feat-card reveal-up delay-4">
+        <div class="feat-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3>100% Hygienic</h3>
+        <p>ISO certified kitchen. All chefs FSSAI trained and certified.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CATEGORIES ===== -->
+<section class="categories-section" id="categories">
+  <div class="container">
+    <div class="section-head reveal-up">
+      <span class="sec-chip">CATEGORIES</span>
+      <h2>What Are You Craving?</h2>
+      <p>Tap a category to filter the menu instantly</p>
+    </div>
+    <div class="cats-grid">
+      <div class="cat-card reveal-up delay-1" data-filter="burgers">
+        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800" alt="Burgers" />
+        <div class="cat-overlay">
+          <h3>Burgers</h3>
+          <span>12 items</span>
+        </div>
+      </div>
+      <div class="cat-card reveal-up delay-2" data-filter="pizza">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800" alt="Pizza" />
+        <div class="cat-overlay">
+          <h3>Pizza</h3>
+          <span>8 items</span>
+        </div>
+      </div>
+      <div class="cat-card reveal-up delay-3" data-filter="chicken">
+        <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=800" alt="Chicken" />
+        <div class="cat-overlay">
+          <h3>Chicken</h3>
+          <span>16 items</span>
+        </div>
+      </div>
+      <div class="cat-card reveal-up delay-4" data-filter="drinks">
+        <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=800" alt="Drinks" />
+        <div class="cat-overlay">
+          <h3>Drinks</h3>
+          <span>10 items</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== OFFERS ===== -->
+<section class="offers-section" id="offers">
+  <div class="container">
+    <div class="section-head reveal-up">
+      <span class="sec-chip">LIMITED TIME</span>
+      <h2>Today's Hot Deals</h2>
+      <p>Exclusive offers — grab them before they're gone</p>
+    </div>
+    <div class="offers-grid">
+      <div class="offer-card o1 reveal-up delay-1">
+        <div class="offer-badge">🔥 HOT</div>
+        <h3>Burger Combo</h3>
+        <p class="offer-discount">Buy 1 Get 1 <strong>FREE</strong></p>
+        <p class="offer-desc">Valid on all classic and signature burgers. Today only!</p>
+        <a href="#menu" class="offer-cta">Grab Offer <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="offer-deco">🍔</div>
+      </div>
+      <div class="offer-card o2 reveal-up delay-2">
+        <div class="offer-badge">🍕 FRIDAY</div>
+        <h3>Pizza Friday</h3>
+        <p class="offer-discount">Flat <strong>40% OFF</strong></p>
+        <p class="offer-desc">Any size, any topping. Every Friday till 10 PM.</p>
+        <a href="#menu" class="offer-cta">Order Now <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="offer-deco">🍕</div>
+      </div>
+      <div class="offer-card o3 reveal-up delay-3">
+        <div class="offer-badge">🥤 FREE</div>
+        <h3>Free Drink</h3>
+        <p class="offer-discount">On orders above <strong>₹499</strong></p>
+        <p class="offer-desc">Choose from our premium mojito, lemonade, or cola.</p>
+        <a href="#menu" class="offer-cta">Claim Deal <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="offer-deco">🥤</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MENU ===== -->
+<section class="menu-section" id="menu">
+  <div class="container">
+    <div class="section-head reveal-up">
+      <span class="sec-chip">OUR MENU</span>
+      <h2>Most Loved Dishes</h2>
+      <p>Handpicked favourites, fresh every day</p>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="menu-tabs reveal-up">
+      <button class="mtab active" data-cat="all">All</button>
+      <button class="mtab" data-cat="burgers">Burgers</button>
+      <button class="mtab" data-cat="pizza">Pizza</button>
+      <button class="mtab" data-cat="chicken">Chicken</button>
+      <button class="mtab" data-cat="drinks">Drinks</button>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+      <div class="menu-loading" style="grid-column: 1/-1; text-align: center; padding: 80px 0; color: var(--amber);">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 3.2rem; margin-bottom: 18px; display: inline-block;"></i>
+        <p style="color: var(--text-2); font-weight: 500; font-size: 1.15rem; letter-spacing: 0.03em;">Preparing Dynamic Menu Experience...</p>
+      </div>
+    </div>
+
+    <div class="no-results" id="noResults" style="display:none">
+      <i class="fa-solid fa-face-frown-open"></i>
+      <p>No dishes found. Try a different search.</p>
+    </div>
+
+    <!-- SEE MORE BUTTON -->
+    <div class="see-more-container reveal-up" id="seeMoreContainer" style="text-align: center; margin-top: 40px; display: none;">
+      <button class="btn-primary" id="seeMoreBtn" style="min-width: 220px;">
+        <span>See More Dishes</span> <i class="fa-solid fa-chevron-down"></i>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about-section" id="about">
+  <div class="container about-grid">
+    <div class="about-img-wrap reveal-left">
+      <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1200" alt="RKR Kitchen" />
+      <div class="about-badge">
+        <i class="fa-solid fa-award"></i>
+        <div><strong>3x</strong><span>Award Winner</span></div>
+      </div>
+    </div>
+    <div class="about-content reveal-right">
+      <span class="sec-chip">ABOUT US</span>
+      <h2>A Legacy of <em>Flavour</em></h2>
+      <p>Since 2018, RKR Restaurant has been Chennai's favourite destination for premium dining. We combine globally inspired recipes with locally sourced ingredients, meticulous preparation, and a heartfelt passion for food.</p>
+      <p>Every dish that leaves our kitchen is a promise — that your experience will be nothing short of extraordinary.</p>
+      <div class="about-checks">
+        <span><i class="fa-solid fa-check"></i> FSSAI Certified Kitchen</span>
+        <span><i class="fa-solid fa-check"></i> Organic Sourcing</span>
+        <span><i class="fa-solid fa-check"></i> No Artificial Preservatives</span>
+        <span><i class="fa-solid fa-check"></i> Zero Food Waste Policy</span>
+      </div>
+      <a href="#contact" class="btn-primary">Get In Touch <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TEAM ===== -->
+<section class="team-section" id="team">
+  <div class="container">
+    <div class="section-head reveal-up">
+      <span class="sec-chip">THE TEAM</span>
+      <h2>Masters Behind the Magic</h2>
+      <p>Passionate chefs who live and breathe great food</p>
+    </div>
+    <div class="team-grid">
+      <div class="chef-card reveal-up delay-1">
+        <div class="chef-img">
+          <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?q=80&w=1000" alt="Chef Rahul" loading="lazy" />
+          <div class="chef-socials">
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="chef-body">
+          <h3>Chef Rahul Krishnan</h3>
+          <p>Italian Cuisine Specialist</p>
+          <span>12 Years Experience</span>
+        </div>
+      </div>
+      <div class="chef-card reveal-up delay-2">
+        <div class="chef-img">
+          <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1000" alt="Chef Priya" loading="lazy" />
+          <div class="chef-socials">
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="chef-body">
+          <h3>Chef Priya Rajan</h3>
+          <p>Indian Cuisine Expert</p>
+          <span>9 Years Experience</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REVIEWS ===== -->
+<section class="reviews-section" id="reviews">
+  <div class="container">
+    <div class="section-head reveal-up">
+      <span class="sec-chip">TESTIMONIALS</span>
+      <h2>Loved by Thousands</h2>
+      <p>Don't take our word for it — hear from our guests</p>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal-up delay-1">
+        <div class="rev-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p>"Absolutely incredible taste and the fastest delivery I've ever experienced. RKR has ruined every other restaurant for me!"</p>
+        <div class="rev-author">
+          <img src="https://i.pravatar.cc/60?img=11" alt="Rahul M" />
+          <div><strong>Rahul Mehta</strong><span>Regular Customer</span></div>
+        </div>
+      </div>
+      <div class="review-card reveal-up delay-2">
+        <div class="rev-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p>"Best burgers in all of Chennai — bar none. The cheese burger is out of this world. Highly recommend to everyone!"</p>
+        <div class="rev-author">
+          <img src="https://i.pravatar.cc/60?img=5" alt="Priya S" />
+          <div><strong>Priya Suresh</strong><span>Food Blogger</span></div>
+        </div>
+      </div>
+      <div class="review-card reveal-up delay-3">
+        <div class="rev-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+        </div>
+        <p>"The tandoori platter is absolutely divine. Fresh, aromatic, perfectly spiced. RKR never misses — genuinely 5-star quality."</p>
+        <div class="rev-author">
+          <img src="https://i.pravatar.cc/60?img=18" alt="Arun K" />
+          <div><strong>Arun Kumar</strong><span>Verified Buyer</span></div>
+        </div>
+      </div>
+      <div class="review-card reveal-up delay-4">
+        <div class="rev-stars">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p>"Ordered for a party of 20 — everyone was blown away. The service team was attentive and the food arrived piping hot."</p>
+        <div class="rev-author">
+          <img src="https://i.pravatar.cc/60?img=22" alt="Divya N" />
+          <div><strong>Divya Nair</strong><span>Corporate Client</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="gallery-section" id="gallery">
+  <div class="container">
+    <div class="section-head reveal-up">
+      <span class="sec-chip">OUR GALLERY</span>
+      <h2>A Feast for the Eyes</h2>
+      <p>Every plate tells a story</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gal-item reveal-up delay-1">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800" alt="Ribs" loading="lazy" />
+        <div class="gal-info"><h3>Signature Ribs</h3><p>Premium Smoked Grill</p></div>
+      </div>
+      <div class="gal-item reveal-up delay-2">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800" alt="Wood-fired Pizza" loading="lazy" />
+        <div class="gal-info"><h3>Artisan Pizza</h3><p>Wood-Fired Crust</p></div>
+      </div>
+      <div class="gal-item reveal-up delay-3">
+        <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=800" alt="Brunch" loading="lazy" />
+        <div class="gal-info"><h3>Avocado Smash</h3><p>Healthy Brunch</p></div>
+      </div>
+      <div class="gal-item reveal-up delay-4">
+        <img src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?q=80&w=800" alt="Pancakes" loading="lazy" />
+        <div class="gal-info"><h3>Berry Pancake</h3><p>Sweet Breakfast</p></div>
+      </div>
+      <div class="gal-item reveal-up delay-1">
+        <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=800" alt="Pasta" loading="lazy" />
+        <div class="gal-info"><h3>Gourmet Pasta</h3><p>Traditional Sauce</p></div>
+      </div>
+      <div class="gal-item reveal-up delay-2">
+        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800" alt="Salad" loading="lazy" />
+        <div class="gal-info"><h3>Citrus Salad</h3><p>Fresh Organic Greens</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div class="section-head reveal-up">
+      <span class="sec-chip">CONTACT US</span>
+      <h2>Let's Connect</h2>
+      <p>We'd love to hear from you — reservations, feedback, or just say hello</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card reveal-up delay-1">
+        <div class="con-icon"><i class="fa-solid fa-location-dot"></i></div>
+        <h3>Location</h3>
+        <p>12, Anna Salai, T. Nagar<br>Chennai, Tamil Nadu – 600017</p>
+      </div>
+      <div class="contact-card reveal-up delay-2">
+        <div class="con-icon"><i class="fa-solid fa-phone"></i></div>
+        <h3>Phone</h3>
+        <p><a href="tel:+919876543210">+91 98765 43210</a><br>Available 10 AM – 11 PM</p>
+      </div>
+      <div class="contact-card reveal-up delay-3">
+        <div class="con-icon"><i class="fa-solid fa-envelope"></i></div>
+        <h3>Email</h3>
+        <p><a href="mailto:hello@rkrrestaurant.com">hello@rkrrestaurant.com</a><br>We reply within 2 hours</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+
+  <div class="footer-top">
+    <div class="container footer-grid">
+
+      <!-- BRAND -->
+      <div class="f-col f-brand">
+
+        <a href="#home" class="logo">
+          <span class="logo-icon">
+            <i class="fa-solid fa-fire-flame-curved"></i>
+          </span>
+
+          <span class="logo-text">
+            RKR<em>Restaurant</em>
+          </span>
+        </a>
+
+        <p>
+          Premium flavours, lightning delivery,
+          and unforgettable dining experiences.
+          Chennai's favourite restaurant since 2018.
+        </p>
+
+        <!-- WORKING SOCIAL ICONS -->
+        <div class="f-socials">
+
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener"
+            aria-label="Facebook"
+          >
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener"
+            aria-label="Instagram"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener"
+            aria-label="YouTube"
+          >
+            <i class="fa-brands fa-youtube"></i>
+          </a>
+
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener"
+            aria-label="Twitter"
+          >
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- NAVIGATION -->
+      <div class="f-col">
+
+        <h4>Navigate</h4>
+
+        <ul>
+
+          <li>
+            <a href="#home">Home</a>
+          </li>
+
+          <li>
+            <a href="#menu">Menu</a>
+          </li>
+
+          <li>
+            <a href="#offers">Offers</a>
+          </li>
+
+          <li>
+            <a href="#about">About</a>
+          </li>
+
+          <li>
+            <a href="#contact">Contact</a>
+          </li>
+
+        </ul>
+
+      </div>
+
+      <!-- OPENING HOURS -->
+      <div class="f-col">
+
+        <h4>Opening Hours</h4>
+
+        <div class="f-hours">
+
+          <span>Mon – Fri</span>
+          <span>10:00 AM – 11:00 PM</span>
+
+          <span>Sat – Sun</span>
+          <span>9:00 AM – 11:30 PM</span>
+
+          <span>Public Holidays</span>
+          <span>10:00 AM – 10:00 PM</span>
+
+        </div>
+
+      </div>
+
+      <!-- NEWSLETTER -->
+      <div class="f-col">
+
+        <h4>Newsletter</h4>
+
+        <p>
+          Subscribe to receive exclusive offers
+          and latest updates.
+        </p>
+
+        <div class="f-newsletter">
+
+          <input
+            type="email"
+            placeholder="your@email.com"
+            id="newsletterInput"
+          />
+
+          <button
+            id="newsletterBtn"
+            aria-label="Subscribe"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER BOTTOM -->
+  <div class="footer-bottom">
+
+    <div class="container footer-bottom-wrap">
+
+      <p>
+        © 2026 RKR Restaurant —
+        All Rights Reserved.
+        Made with
+        <i
+          class="fa-solid fa-heart"
+          style="color:#ef4444"
+        ></i>
+        in Chennai.
+      </p>
+
+      <!-- WORKING LEGAL LINKS -->
+      <div class="f-legal">
+
+        <a href="privacy.html">
+          Privacy Policy
+        </a>
+
+        <a href="terms.html">
+          Terms of Use
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast">
+
+  <i class="fa-solid fa-circle-check"></i>
+
+  <span id="toastMsg">
+    Done!
+  </span>
+
+</div>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-drawer" id="cartDrawer">
+
+  <div class="cart-header">
+
+    <h3>
+      <i class="fa-solid fa-bag-shopping"></i>
+      Your Cart
+    </h3>
+
+    <button id="cartClose">
+
+      <i class="fa-solid fa-xmark"></i>
+
+    </button>
+
+  </div>
+
+  <div class="cart-items" id="cartItems"></div>
+
+  <div class="cart-footer" id="cartFooter">
+
+    <div class="cart-total">
+
+      Total:
+      <span id="cartTotal">₹0</span>
+
+    </div>
+
+    <a
+      href="cart.html"
+      class="btn-primary"
+      style="width:100%;justify-content:center"
+    >
+      Proceed to Checkout
+    </a>
+
+  </div>
+
+</div>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay"></div>
+
+<!-- ===== BACK TO TOP ===== -->
+<button
+  class="top-btn"
+  id="topBtn"
+  aria-label="Back to top"
+>
+  <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<!-- ===== JS ===== -->
+<script src="js/script.js"></script>
+
+<!-- ===== EXTRA FIXED JAVASCRIPT ===== -->
+<script>
+
+/* ============================================================
+   EXTRA BUTTON + ICON FUNCTIONALITY
+============================================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  initWishlist();
+  initSearchTags();
+  initFooterEffects();
+  initChefSocials();
+  initLegalLinks();
+  initPreventEmptyLinks();
+
+});
+
+/* ============================================================
+   WISHLIST SYSTEM
+============================================================ */
+
+function initWishlist() {
+
+  const buttons = document.querySelectorAll('.wishlist-btn');
+
+  buttons.forEach(btn => {
+
+    btn.addEventListener('click', function () {
+
+      this.classList.toggle('active');
+
+      const icon = this.querySelector('i');
+
+      if (this.classList.contains('active')) {
+
+        icon.className = 'fa-solid fa-heart';
+
+        showToast('Added to wishlist ❤️');
+
+      } else {
+
+        icon.className = 'fa-regular fa-heart';
+
+        showToast('Removed from wishlist');
+
+      }
+
+    });
+
+  });
+
+}
+
+/* ============================================================
+   SEARCH TAGS
+============================================================ */
+
+function initSearchTags() {
+
+  const tags = document.querySelectorAll('.stag');
+  const input = document.querySelector('#searchInput');
+
+  if (!input) return;
+
+  tags.forEach(tag => {
+
+    tag.addEventListener('click', () => {
+
+      const value = tag.dataset.q || '';
+
+      input.value = value;
+
+      input.dispatchEvent(new Event('input'));
+
+      const menu = document.querySelector('#menu');
+
+      if (menu) {
+
+        window.scrollTo({
+          top: menu.offsetTop - 100,
+          behavior: 'smooth'
+        });
+
+      }
+
+    });
+
+  });
+
+}
+
+/* ============================================================
+   FOOTER ICON EFFECTS
+============================================================ */
+
+function initFooterEffects() {
+
+  const icons = document.querySelectorAll('.f-socials a');
+
+  icons.forEach(icon => {
+
+    icon.addEventListener('mouseenter', () => {
+
+      icon.style.transform = 'translateY(-5px) scale(1.08)';
+
+    });
+
+    icon.addEventListener('mouseleave', () => {
+
+      icon.style.transform = '';
+
+    });
+
+  });
+
+}
+
+/* ============================================================
+   CHEF SOCIALS
+============================================================ */
+
+function initChefSocials() {
+
+  const links = document.querySelectorAll('.chef-socials a');
+
+  links.forEach(link => {
+
+    link.addEventListener('click', e => {
+
+      e.preventDefault();
+
+      showToast('Chef profile coming soon 👨‍🍳');
+
+    });
+
+  });
+
+}
+
+/* ============================================================
+   LEGAL LINKS
+============================================================ */
+
+function initLegalLinks() {
+
+  const links = document.querySelectorAll('.f-legal a');
+
+  links.forEach(link => {
+
+    link.addEventListener('click', e => {
+
+      if (
+        link.getAttribute('href') === '#'
+      ) {
+
+        e.preventDefault();
+
+        showToast('Page coming soon');
+
+      }
+
+    });
+
+  });
+
+}
+
+/* ============================================================
+   PREVENT EMPTY LINKS
+============================================================ */
+
+function initPreventEmptyLinks() {
+
+  const emptyLinks =
+    document.querySelectorAll('a[href="#"]');
+
+  emptyLinks.forEach(link => {
+
+    link.addEventListener('click', e => {
+
+      e.preventDefault();
+
+    });
+
+  });
+
+}
+
+</script>
+
+
+</body>
+</html>

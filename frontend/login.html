@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RKR Restaurant - Login</title>
+
+    <!-- GOOGLE FONT -->
+
+    <link rel="preconnect"
+    href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin>
+
+    <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
+
+</head>
+
+<body>
+
+    <!-- ===== PRELOADER ===== -->
+    <div class="preloader" id="preloader">
+      <div class="preloader-inner">
+        <div class="pl-logo">RKR</div>
+        <div class="pl-bar"><div class="pl-fill"></div></div>
+        <p class="pl-tagline">Crafting your experience…</p>
+      </div>
+    </div>
+
+
+    <!-- ===== FLOATING HEADER ===== -->
+    <header class="header" id="header">
+      <nav class="navbar container">
+
+        <a href="index.html#home" class="logo">
+          <span class="logo-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
+          <span class="logo-text">RKR<em>Restaurant</em></span>
+        </a>
+
+        <!-- BACKDROP -->
+        <div class="nav-backdrop" id="navBackdrop"></div>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="index.html#home" class="nav-link">Home</a></li>
+          <li><a href="index.html#categories" class="nav-link">Categories</a></li>
+          <li><a href="index.html#offers" class="nav-link">Offers</a></li>
+          <li><a href="index.html#menu" class="nav-link">Menu</a></li>
+          <li><a href="index.html#about" class="nav-link">About</a></li>
+          <li><a href="index.html#team" class="nav-link">Chefs</a></li>
+          <li><a href="index.html#reviews" class="nav-link">Reviews</a></li>
+          <li><a href="index.html#gallery" class="nav-link">Gallery</a></li>
+          <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+          <!-- mobile auth -->
+          <li class="mobile-only"><a href="login.html" class="mob-btn mob-login">Login</a></li>
+          <li class="mobile-only"><a href="signup.html" class="mob-btn mob-signup">Sign Up</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <a href="login.html"  class="ghost-btn">Login</a>
+          <a href="signup.html" class="fill-btn">Sign Up</a>
+          <a href="cart.html"   class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </a>
+          <button class="hamburger" id="hamburger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+
+      </nav>
+    </header>
+
+    <section class="login-page">
+
+        <div class="login-card">
+
+            <!-- LEFT SIDE -->
+
+            <div class="login-left">
+
+                <div class="overlay"></div>
+
+                <div class="left-content">
+
+                    <span class="tag">
+                        Premium Restaurant
+                    </span>
+
+                    <h1>
+                        🍔 RKR Restaurant
+                    </h1>
+
+                    <p>
+                        Fresh meals, quick delivery,
+                        and premium dining experience.
+                    </p>
+
+                    <div class="stats">
+
+                        <div class="stat-box">
+                            <h3>10K+</h3>
+                            <span>Customers</span>
+                        </div>
+
+                        <div class="stat-box">
+                            <h3>4.9★</h3>
+                            <span>Rating</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE -->
+
+            <div class="login-right">
+
+                <form class="login-form" id="loginForm" onsubmit="return false;">
+
+                    <div class="form-header">
+
+                        <h2>Welcome Back</h2>
+
+                        <p>
+                            Login to continue your food journey
+                        </p>
+
+                    </div>
+
+                    <!-- EMAIL -->
+
+                    <div class="input-group">
+
+                        <label>Email Address</label>
+
+                        <div class="input-box">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="Enter your email"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- PASSWORD -->
+
+                    <div class="input-group">
+
+                        <label>Password</label>
+
+                        <div class="input-box password-box">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Enter your password"
+                            >
+
+                            <i
+                                class="fa-solid fa-eye toggle-password"
+                                onclick="togglePassword()"
+                            ></i>
+
+                        </div>
+
+                    </div>
+
+                    <!-- OPTIONS -->
+
+                    <div class="options">
+
+                        <label class="remember">
+
+                            <input type="checkbox">
+
+                            Remember Me
+
+                        </label>
+
+                        <a href="forgot-password.html">
+                            Forgot Password?
+                        </a>
+
+                    </div>
+
+                    <!-- BUTTON -->
+
+                    <button
+                        type="button"
+                        class="login-btn"
+                        onclick="loginUser()"
+                    >
+                        Login Account
+                    </button>
+
+                    <!-- DIVIDER -->
+
+                    <div class="divider">
+                        <span>OR CONTINUE WITH</span>
+                    </div>
+
+                    <!-- SOCIAL -->
+
+                    <div class="social-login">
+
+                        <button
+                            type="button"
+                            class="social-btn google"
+                            onclick="googleLogin()"
+                        >
+                            <i class="fa-brands fa-google"></i>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="social-btn facebook"
+                            onclick="facebookLogin()"
+                        >
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="social-btn apple"
+                            onclick="appleLogin()"
+                        >
+                            <i class="fa-brands fa-apple"></i>
+                        </button>
+
+                    </div>
+
+                    <!-- SIGNUP -->
+
+                    <p class="signup-link">
+
+                        Don't have an account?
+
+                        <a href="signup.html">
+                            Create Account
+                        </a>
+
+                    </p>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer" style="width: 100%; margin-top: 50px;">
+
+      <div class="footer-top">
+        <div class="container footer-grid">
+
+          <!-- BRAND -->
+          <div class="f-col f-brand">
+
+            <a href="index.html#home" class="logo">
+              <span class="logo-icon">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+              </span>
+
+              <span class="logo-text">
+                RKR<em>Restaurant</em>
+              </span>
+            </a>
+
+            <p>
+              Premium flavours, lightning delivery,
+              and unforgettable dining experiences.
+              Chennai's favourite restaurant since 2018.
+            </p>
+
+            <!-- WORKING SOCIAL ICONS -->
+            <div class="f-socials">
+
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="Facebook"
+              >
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="Instagram"
+              >
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="YouTube"
+              >
+                <i class="fa-brands fa-youtube"></i>
+              </a>
+
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener"
+                aria-label="Twitter"
+              >
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+
+            </div>
+          </div>
+
+          <!-- NAVIGATION -->
+          <div class="f-col">
+
+            <h4>Navigate</h4>
+
+            <ul>
+
+              <li>
+                <a href="index.html#home">Home</a>
+              </li>
+
+              <li>
+                <a href="index.html#menu">Menu</a>
+              </li>
+
+              <li>
+                <a href="index.html#offers">Offers</a>
+              </li>
+
+              <li>
+                <a href="index.html#about">About</a>
+              </li>
+
+              <li>
+                <a href="index.html#contact">Contact</a>
+              </li>
+
+            </ul>
+
+          </div>
+
+          <!-- OPENING HOURS -->
+          <div class="f-col">
+
+            <h4>Opening Hours</h4>
+
+            <div class="f-hours">
+
+              <span>Mon – Fri</span>
+              <span>10:00 AM – 11:00 PM</span>
+
+              <span>Sat – Sun</span>
+              <span>9:00 AM – 11:30 PM</span>
+
+              <span>Public Holidays</span>
+              <span>10:00 AM – 10:00 PM</span>
+
+            </div>
+
+          </div>
+
+          <!-- NEWSLETTER -->
+          <div class="f-col">
+
+            <h4>Newsletter</h4>
+
+            <p>
+              Subscribe to receive exclusive offers
+              and latest updates.
+            </p>
+
+            <div class="f-newsletter">
+
+              <input
+                type="email"
+                placeholder="your@email.com"
+                id="newsletterInput"
+              />
+
+              <button
+                id="newsletterBtn"
+                aria-label="Subscribe"
+              >
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FOOTER BOTTOM -->
+      <div class="footer-bottom">
+
+        <div class="container footer-bottom-wrap">
+
+          <p>
+            © 2026 RKR Restaurant —
+            All Rights Reserved.
+            Made with
+            <i
+              class="fa-solid fa-heart"
+              style="color:#ef4444"
+            ></i>
+            in Chennai.
+          </p>
+
+          <!-- WORKING LEGAL LINKS -->
+          <div class="f-legal">
+
+            <a href="privacy.html">
+              Privacy Policy
+            </a>
+
+            <a href="terms.html">
+              Terms of Use
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+
+    <!-- JS -->
+    <script src="js/script.js"></script>
+    <script src="js/login.js"></script>
+
+</body>
+</html>
