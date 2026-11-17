@@ -4,6 +4,19 @@
 
 /* SIGNUP FUNCTION */
 
+// Ensure getApiUrl is defined even if loaded standalone
+if (typeof getApiUrl !== 'function') {
+    window.getApiUrl = function(path) {
+        const hostname = window.location.hostname;
+        const isLocal = !hostname || 
+                        window.location.protocol === 'file:' || 
+                        hostname === 'localhost' || 
+                        hostname === '127.0.0.1';
+        const base = isLocal ? 'http://localhost:5000' : 'https://rkr-restaurant-backend.onrender.com';
+        return base + path;
+    };
+}
+
 async function signupUser(){
 
     // INPUT VALUES
@@ -79,7 +92,7 @@ async function signupUser(){
         // API REQUEST
 
         const response = await fetch(
-           "https://rkr-restaurant-backend.onrender.com/api/auth/signup",
+            getApiUrl("/api/auth/signup"),
             {
 
                 method: "POST",
@@ -271,3 +284,20 @@ function showMessage(message, type) {
         }, 400);
     }, 3000);
 }
+
+/* ENTER KEY AND FORM SUBMIT LISTENER */
+document.addEventListener("DOMContentLoaded", () => {
+    const signupForm = document.getElementById("signupForm");
+    if (signupForm) {
+        signupForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            signupUser();
+        });
+        signupForm.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                signupUser();
+            }
+        });
+    }
+});

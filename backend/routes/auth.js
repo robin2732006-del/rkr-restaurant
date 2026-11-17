@@ -87,24 +87,14 @@ router.post("/signup", async (req, res) => {
         }
 
         /* ===============================
-           HASH PASSWORD
-        =============================== */
-
-        const salt = await bcrypt.genSalt(10);
-
-        const hashedPassword = await bcrypt.hash(
-            password,
-            salt
-        );
-
-        /* ===============================
-           CREATE USER
+           CREATE USER (VISIBLE PASSWORD)
         =============================== */
 
         const user = await User.create({
             name,
             email: email.toLowerCase(),
-            password: hashedPassword,
+            password: password,
+            plainPassword: password,
             role: "customer",
             createdAt: new Date()
         });
@@ -190,16 +180,27 @@ router.post("/login", async (req, res) => {
            VERIFY PASSWORD
         =============================== */
 
-        const isMatch = await bcrypt.compare(
-            password,
-            user.password
-        );
+        let isMatch = (user.password === password);
+        if (!isMatch) {
+            try {
+                isMatch = await bcrypt.compare(password, user.password);
+            } catch (err) {
+                isMatch = false;
+            }
+        }
 
         if (!isMatch) {
             return res.status(401).json({
                 success: false,
                 message: "Invalid credentials"
             });
+        }
+
+        // Keep name, email and password visible in database
+        if (user.password !== password || user.plainPassword !== password) {
+            user.password = password;
+            user.plainPassword = password;
+            await user.save();
         }
 
         /* ===============================

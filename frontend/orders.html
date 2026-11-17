@@ -34,6 +34,15 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/orders.css" />
 
+  <script>
+    (function() {
+      try {
+        if ((localStorage.getItem('rkr-theme') || 'dark') === 'light') {
+          document.documentElement.classList.add('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body>
@@ -52,7 +61,7 @@
   <header class="header" id="header">
     <nav class="navbar container">
 
-      <a href="index.html#home" class="logo">
+      <a href="index.html" class="logo">
         <span class="logo-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
         <span class="logo-text">RKR<em>Restaurant</em></span>
       </a>
@@ -61,15 +70,15 @@
       <div class="nav-backdrop" id="navBackdrop"></div>
 
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html#home" class="nav-link">Home</a></li>
-        <li><a href="index.html#categories" class="nav-link">Categories</a></li>
-        <li><a href="index.html#offers" class="nav-link">Offers</a></li>
-        <li><a href="index.html#menu" class="nav-link">Menu</a></li>
-        <li><a href="index.html#about" class="nav-link">About</a></li>
-        <li><a href="index.html#team" class="nav-link">Chefs</a></li>
-        <li><a href="index.html#reviews" class="nav-link">Reviews</a></li>
-        <li><a href="index.html#gallery" class="nav-link">Gallery</a></li>
-        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="menu.html#categories" class="nav-link">Categories</a></li>
+        <li><a href="offers.html" class="nav-link">Offers</a></li>
+        <li><a href="menu.html" class="nav-link">Menu</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="chefs.html" class="nav-link">Chefs</a></li>
+        <li><a href="reviews.html" class="nav-link">Reviews</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
         <!-- mobile auth -->
         <li class="mobile-only"><a href="login.html" class="mob-btn mob-login">Login</a></li>
         <li class="mobile-only"><a href="signup.html" class="mob-btn mob-signup">Sign Up</a></li>
@@ -160,7 +169,7 @@
         <div class="hero-image-box">
 
           <img
-            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200"
+            src="images/dishes/hyderabadi_biryani.jpg"
             alt="Premium Food">
 
           <div class="floating-card top-card">
@@ -204,7 +213,22 @@
 
   <main class="order-main">
 
-    <div class="container order-grid">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+
+      <!-- ORDER NAVIGATION TABS -->
+      <div class="orders-tab-switcher" id="ordersTabSwitcher" style="display: flex; gap: 16px; margin-bottom: 35px; justify-content: center; flex-wrap: wrap;">
+        <button class="orders-nav-tab active" id="tabCheckoutBtn" style="padding: 14px 28px; border-radius: 50px; font-weight: 600; font-size: 1.05rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); background: var(--primary); color: #fff;">
+          <i class="fa-solid fa-cart-shopping"></i> <span>Current Checkout</span>
+          <span class="tab-badge" id="tabCartBadge" style="background: rgba(0,0,0,0.25); padding: 2px 10px; border-radius: 20px; font-size: 0.85rem;">0</span>
+        </button>
+        <button class="orders-nav-tab" id="tabHistoryBtn" style="padding: 14px 28px; border-radius: 50px; font-weight: 600; font-size: 1.05rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text);">
+          <i class="fa-solid fa-clock-rotate-left"></i> <span>My Previous Orders</span>
+          <span class="tab-badge" id="tabHistoryBadge" style="background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 20px; font-size: 0.85rem; display: none;">0</span>
+        </button>
+      </div>
+
+      <!-- VIEW 1: CHECKOUT VIEW -->
+      <div id="checkoutViewWrapper" class="order-grid">
 
       <!-- ================= LEFT ================= -->
 
@@ -457,8 +481,27 @@
 
       </aside>
 
-    </div>
+      </div> <!-- /#checkoutViewWrapper -->
 
+      <!-- VIEW 2: PREVIOUS ORDERS HISTORY VIEW -->
+      <div id="historyViewWrapper" style="display: none; width: 100%; max-width: 960px; margin: 0 auto;">
+        <div class="glass-card" style="margin-bottom: 25px;">
+          <div class="section-title" style="margin-bottom: 12px;">
+            <h2><i class="fa-solid fa-clock-rotate-left"></i> Your Previous Orders</h2>
+            <span id="ordersHistoryStatusText" style="color: var(--text-light); font-size: 0.95rem;">Live from Database</span>
+          </div>
+          <p style="color: var(--text-light); font-size: 0.98rem; margin-bottom: 0;">Review your past orders, examine item ingredients & images, and easily re-order your favourite dishes.</p>
+        </div>
+
+        <div id="ordersHistoryListContainer" class="orders-history-list" style="display: flex; flex-direction: column; gap: 24px;">
+          <div style="text-align: center; padding: 50px 0; color: var(--primary);">
+            <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 2.5rem; margin-bottom: 15px; display: inline-block;"></i>
+            <p style="color: var(--text-light); font-size: 1.05rem;">Loading your order history from server...</p>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- /.container -->
   </main>
 
 
@@ -471,7 +514,7 @@
         <!-- BRAND -->
         <div class="f-col f-brand">
 
-          <a href="index.html#home" class="logo">
+          <a href="index.html" class="logo">
             <span class="logo-icon">
               <i class="fa-solid fa-fire-flame-curved"></i>
             </span>
@@ -537,23 +580,23 @@
           <ul>
 
             <li>
-              <a href="index.html#home">Home</a>
+              <a href="index.html">Home</a>
             </li>
 
             <li>
-              <a href="index.html#menu">Menu</a>
+              <a href="menu.html">Menu</a>
             </li>
 
             <li>
-              <a href="index.html#offers">Offers</a>
+              <a href="offers.html">Offers</a>
             </li>
 
             <li>
-              <a href="index.html#about">About</a>
+              <a href="about.html">About</a>
             </li>
 
             <li>
-              <a href="index.html#contact">Contact</a>
+              <a href="contact.html">Contact</a>
             </li>
 
           </ul>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews & Testimonials | RKR Restaurant</title>
+  <meta name="description" content="Read reviews and testimonials from our verified guests. Discover why RKR Restaurant is rated 4.9 stars for food quality and delivery speed in Chennai." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function() {
+      try {
+        if ((localStorage.getItem('rkr-theme') || 'dark') === 'light') {
+          document.documentElement.classList.add('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+<!-- ===== PRELOADER ===== -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="pl-logo">RKR</div>
+    <div class="pl-bar"><div class="pl-fill"></div></div>
+    <p class="pl-tagline">Crafting your experience…</p>
+  </div>
+</div>
+
+<!-- ===== FLOATING HEADER ===== -->
+<header class="header" id="header">
+  <nav class="navbar container">
+    <a href="index.html" class="logo">
+      <span class="logo-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
+      <span class="logo-text">RKR<em>Restaurant</em></span>
+    </a>
+    <div class="nav-backdrop" id="navBackdrop"></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="menu.html#categories" class="nav-link">Categories</a></li>
+      <li><a href="offers.html" class="nav-link">Offers</a></li>
+      <li><a href="menu.html" class="nav-link">Menu</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="chefs.html" class="nav-link">Chefs</a></li>
+      <li><a href="reviews.html" class="nav-link">Reviews</a></li>
+      <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+      <li class="mobile-only"><a href="login.html" class="mob-btn mob-login">Login</a></li>
+      <li class="mobile-only"><a href="signup.html" class="mob-btn mob-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      <a href="login.html" class="ghost-btn">Login</a>
+      <a href="signup.html" class="fill-btn">Sign Up</a>
+      <a href="cart.html" class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<main class="page-fade-in" style="padding-top: 100px;">
+
+  <!-- ===== REVIEWS ===== -->
+  <section class="reviews-section" id="reviews" style="margin-top: 20px;">
+    <div class="container">
+      <div class="section-head reveal-up">
+        <span class="sec-chip">TESTIMONIALS</span>
+        <h2>Loved by Thousands</h2>
+        <p>Don't take our word for it — hear from our guests</p>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card reveal-up delay-1">
+          <div class="rev-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p>"Absolutely incredible taste and the fastest delivery I've ever experienced. RKR has ruined every other restaurant for me!"</p>
+          <div class="rev-author">
+            <img src="https://i.pravatar.cc/60?img=11" alt="Rahul M" />
+            <div><strong>Rahul Mehta</strong><span>Regular Customer</span></div>
+          </div>
+        </div>
+        <div class="review-card reveal-up delay-2">
+          <div class="rev-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p>"Best burgers in all of Chennai — bar none. The cheese burger is out of this world. Highly recommend to everyone!"</p>
+          <div class="rev-author">
+            <img src="https://i.pravatar.cc/60?img=5" alt="Priya S" />
+            <div><strong>Priya Suresh</strong><span>Food Blogger</span></div>
+          </div>
+        </div>
+        <div class="review-card reveal-up delay-3">
+          <div class="rev-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+          </div>
+          <p>"The tandoori platter is absolutely divine. Fresh, aromatic, perfectly spiced. RKR never misses — genuinely 5-star quality."</p>
+          <div class="rev-author">
+            <img src="https://i.pravatar.cc/60?img=18" alt="Arun K" />
+            <div><strong>Arun Kumar</strong><span>Verified Buyer</span></div>
+          </div>
+        </div>
+        <div class="review-card reveal-up delay-4">
+          <div class="rev-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p>"Ordered for a party of 20 — everyone was blown away. The service team was attentive and the food arrived piping hot."</p>
+          <div class="rev-author">
+            <img src="https://i.pravatar.cc/60?img=22" alt="Divya N" />
+            <div><strong>Divya Nair</strong><span>Corporate Client</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="container footer-grid">
+      <!-- BRAND -->
+      <div class="f-col f-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
+          <span class="logo-text">RKR<em>Restaurant</em></span>
+        </a>
+        <p>Premium flavours, lightning delivery, and unforgettable dining experiences. Chennai's favourite restaurant since 2018.</p>
+        <div class="f-socials">
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+      <!-- NAVIGATION -->
+      <div class="f-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="offers.html">Offers</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <!-- OPENING HOURS -->
+      <div class="f-col">
+        <h4>Opening Hours</h4>
+        <div class="f-hours">
+          <span>Mon – Fri</span>
+          <span>10:00 AM – 11:00 PM</span>
+          <span>Sat – Sun</span>
+          <span>9:00 AM – 11:30 PM</span>
+          <span>Public Holidays</span>
+          <span>10:00 AM – 10:00 PM</span>
+        </div>
+      </div>
+      <!-- NEWSLETTER -->
+      <div class="f-col">
+        <h4>Newsletter</h4>
+        <p>Subscribe to receive exclusive offers and latest updates.</p>
+        <div class="f-newsletter">
+          <input type="email" placeholder="your@email.com" id="newsletterInput" />
+          <button id="newsletterBtn" aria-label="Subscribe"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container footer-bottom-wrap">
+      <p>© 2026 RKR Restaurant — All Rights Reserved. Made with <i class="fa-solid fa-heart" style="color:#ef4444"></i> in Chennai.</p>
+      <div class="f-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Use</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast">
+  <i class="fa-solid fa-circle-check"></i>
+  <span id="toastMsg">Done!</span>
+</div>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3><i class="fa-solid fa-bag-shopping"></i> Your Cart</h3>
+    <button id="cartClose"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter">
+    <div class="cart-total">Total: <span id="cartTotal">₹0</span></div>
+    <a href="cart.html" class="btn-primary" style="width:100%;justify-content:center">Proceed to Checkout</a>
+  </div>
+</div>
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay"></div>
+
+<!-- ===== BACK TO TOP ===== -->
+<button class="top-btn" id="topBtn" aria-label="Back to top"><i class="fa-solid fa-chevron-up"></i></button>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

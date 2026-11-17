@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (orderId) {
         orderId.textContent =
-            lastOrder?.id || generateOrderId();
+            lastOrder?._id || lastOrder?.id || generateOrderId();
     }
 
     /* ==========================
@@ -78,61 +78,97 @@ document.addEventListener("DOMContentLoaded", () => {
     const address =
         $("#success-address");
 
-    if (
-        address &&
-        lastOrder?.address
-    ) {
+    if (address) {
         address.textContent =
-            lastOrder.address;
+            lastOrder?.deliveryInfo?.address || lastOrder?.address || "Address not provided";
+    }
+
+    /* =========================================================
+       CHANGE DELIVERY ADDRESS HANDLER
+    ========================================================= */
+    const changeBtn = $(".change-btn");
+    if (changeBtn && address) {
+        changeBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const currentAddress = address.textContent.trim();
+            const defaultPrompt = (currentAddress && currentAddress !== "Address not provided") ? currentAddress : "";
+            
+            const newAddress = window.prompt("📍 Enter updated delivery address for this order:", defaultPrompt);
+            
+            if (newAddress !== null && newAddress.trim() !== "") {
+                const trimmed = newAddress.trim();
+                address.textContent = trimmed;
+                
+                // 1. Update in local storage
+                try {
+                    let orderData = JSON.parse(localStorage.getItem("last-order")) || {};
+                    if (!orderData.deliveryInfo) orderData.deliveryInfo = {};
+                    orderData.deliveryInfo.address = trimmed;
+                    orderData.address = trimmed;
+                    localStorage.setItem("last-order", JSON.stringify(orderData));
+                } catch (err) {
+                    console.error("Local storage address update error:", err);
+                }
+
+                // 2. Update on server if order ID exists
+                try {
+                    const orderDbId = lastOrder?._id || lastOrder?.id;
+                    if (orderDbId && !orderDbId.toString().startsWith("#")) {
+                        const apiBase = (typeof getApiUrl === "function") 
+                            ? getApiUrl(`/api/orders/${orderDbId}`) 
+                            : `/api/orders/${orderDbId}`;
+                        await fetch(apiBase, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ "deliveryInfo.address": trimmed, address: trimmed })
+                        }).catch(() => {});
+                    }
+                } catch (err) {
+                    console.error("Server order address update error:", err);
+                }
+
+                // 3. Update user profile in database if logged in
+                try {
+                    const userData = JSON.parse(localStorage.getItem("user"));
+                    const token = userData?.token;
+                    if (token) {
+                        const profileUrl = (typeof getApiUrl === "function") 
+                            ? getApiUrl("/api/auth/profile") 
+                            : "/api/auth/profile";
+                        await fetch(profileUrl, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ address: trimmed })
+                        }).catch(() => {});
+                    }
+                } catch (err) {
+                    console.error("Profile address update error:", err);
+                }
+
+                // Visual feedback: temporarily switch button to Saved!
+                const originalText = changeBtn.innerHTML;
+                changeBtn.innerHTML = '<i class="fa-solid fa-check"></i> Saved';
+                changeBtn.style.background = "linear-gradient(135deg, #22c55e, #16a34a)";
+                setTimeout(() => {
+                    changeBtn.innerHTML = originalText;
+                    changeBtn.style.background = "";
+                }, 2000);
+            }
+        });
     }
 
     /* ==========================
        ORDER ITEMS
     ========================== */
 
-    const IMAGE_MAPPING = {
-      'Classic Smash Burger': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400',
-      'BBQ Bacon Burger': 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?q=80&w=400',
-      'Spicy Jalapeño Burger': 'https://images.unsplash.com/photo-1586816001966-79b736744398?q=80&w=400',
-      'Mushroom Swiss Burger': 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=400',
-      'Veggie Avocado Burger': 'https://images.unsplash.com/photo-1520072959219-c595dc870360?q=80&w=400',
-      'Double Trouble Burger': 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=400',
-      'Crispy Chicken Burger': 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?q=80&w=400',
-      'Truffle Royale Burger': 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?q=80&w=400',
-      'Korean BBQ Burger': 'https://images.unsplash.com/photo-1561758033-d89a9ad46330?q=80&w=400',
-      'Egg & Cheese Breakfast Burger': 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=400',
-      'Margherita Classic': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=400',
-      'Pepperoni Feast': 'https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=400',
-      'BBQ Chicken Pizza': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=400',
-      'Four Cheese Pizza': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400',
-      'Spicy Paneer Pizza': 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?q=80&w=400',
-      'Veggie Supreme Pizza': 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?q=80&w=400',
-      'Peri Peri Chicken Pizza': 'https://images.unsplash.com/photo-1520201163981-8cc95007dd2a?q=80&w=400',
-      'Truffle Mushroom Pizza': 'https://images.unsplash.com/photo-1548369937-47519962c11a?q=80&w=400',
-      'Prawn & Garlic Pizza': 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=400',
-      'Nutella Dessert Pizza': 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?q=80&w=400',
-      'Butter Chicken': 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=400',
-      'Crispy Fried Chicken': 'https://images.unsplash.com/photo-1562967914-608f82629710?q=80&w=400',
-      'Chicken Shawarma Wrap': 'https://images.unsplash.com/photo-1529006557810-274b9b2fc783?q=80&w=400',
-      'Grilled Lemon Herb Chicken': 'https://images.unsplash.com/photo-1598103442097-8b74394b95c3?q=80&w=400',
-      'Chicken Tikka': 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=400',
-      'Nashville Hot Chicken': 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?q=80&w=400',
-      'Chicken Caesar Salad': 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?q=80&w=400',
-      'Dragon Fire Wings': 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=400',
-      'Chicken Quesadilla': 'https://images.unsplash.com/photo-1618040996337-56904b7850b9?q=80&w=400',
-      'Chicken Biryani': 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=400',
-      'Mango Lassi': 'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?q=80&w=400',
-      'Classic Cold Coffee': 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=400',
-      'Fresh Lime Soda': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=400',
-      'Strawberry Milkshake': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400',
-      'Watermelon Cooler': 'https://images.unsplash.com/photo-1534353436294-0dbd4bdac845?q=80&w=400',
-      'Chocolate Brownie Shake': 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=400',
-      'Virgin Mojito': 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?q=80&w=400',
-      'Rose Sharbat': 'https://images.unsplash.com/photo-1544145945-f90425340c7e?q=80&w=400',
-      'Masala Chai': 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=400',
-      'Blue Lagoon Mocktail': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=400',
-      'Cheese Burger': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1000',
-      'Italian Pizza': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1000'
+    const IMAGE_MAPPING = {};
+    if (window.STATIC_MENU && Array.isArray(window.STATIC_MENU)) {
+        window.STATIC_MENU.forEach(item => {
+            IMAGE_MAPPING[item.name] = item.image;
+        });
     };
 
     const container =
@@ -140,13 +176,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
         container &&
-        lastOrder?.items?.length
+        lastOrder?.items &&
+        Array.isArray(lastOrder.items) &&
+        lastOrder.items.length > 0
     ) {
 
+        const validItems = lastOrder.items.filter(item => item !== null && typeof item === 'object');
+
         const totalQty =
-            lastOrder.items.reduce(
+            validItems.reduce(
                 (sum, item) =>
-                    sum + item.quantity,
+                    sum + (Number(item.quantity) || 0),
                 0
             );
 
@@ -156,8 +196,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span>${totalQty} Items</span>
             </div>
 
-            ${lastOrder.items.map(item => {
-                const matchedImg = item.image || item.img || IMAGE_MAPPING[item.name] || 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400';
+            ${validItems.map(item => {
+                const matchedImg = item.image || item.img || IMAGE_MAPPING[item.name] || 'images/dishes/hyderabadi_biryani.jpg';
                 return `
                 <div class="food-item">
 
@@ -167,12 +207,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
                             <img
                                 src="${matchedImg}"
-                                alt="${item.name}"
-                                onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400'"
+                                alt="${item.name || 'Dish'}"
+                                onerror="this.src='images/dishes/hyderabadi_biryani.jpg'"
                                 style="
                                     width:100%;
                                     height:100%;
-                                    object-fit:cover;
+                                    object-fit:contain;
+                                    background:rgba(255, 255, 255, 0.05);
                                     border-radius:16px;
                                 "
                             >
@@ -180,17 +221,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
 
                         <div>
-                            <h4>${item.name}</h4>
+                            <h4>${item.name || 'Premium Dish'}</h4>
 
                             <p>
-                                ${item.quantity} × ₹${item.price}
+                                ${(Number(item.quantity) || 0)} × ₹${(Number(item.price) || 0)}
                             </p>
                         </div>
 
                     </div>
 
                     <strong>
-                        ₹${item.price * item.quantity}
+                        ₹${(Number(item.price) || 0) * (Number(item.quantity) || 0)}
                     </strong>
 
                 </div>

@@ -37,6 +37,15 @@
 
 html{
   scroll-behavior:smooth;
+  zoom: 1;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    zoom: 1;
+    font-size: 16px;
+  }
 }
 
 body{
@@ -532,7 +541,8 @@ textarea{
 .cart-img img{
 
   height:100%;
-  object-fit:cover;
+  object-fit:contain;
+  background:rgba(255, 255, 255, 0.05);
 
 }
 

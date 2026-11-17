@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile Dashboard | RKR Restaurant</title>
+  <meta name="description" content="Manage your RKR Restaurant account, view loyalty reward points, track active perks, and update delivery settings." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    // 1. Immediate theme resolution: prevent dark flash in light mode
+    (function() {
+      try {
+        const theme = localStorage.getItem('rkr-theme') || 'dark';
+        if (theme === 'light') {
+          document.documentElement.classList.add('light');
+        }
+      } catch (e) {}
+    })();
+
+    // 2. Robust session check: if not logged in, seed interactive VIP member profile for instant preview
+    (function() {
+      try {
+        const stored = localStorage.getItem('user');
+        const parsed = stored ? JSON.parse(stored) : null;
+        if (!parsed || (!parsed.user && !parsed.name)) {
+          localStorage.setItem('user', JSON.stringify({
+            token: 'vip-demo-token-rkr',
+            user: {
+              id: 'usr-vip-001',
+              name: 'Rohan Sharma',
+              email: 'rohan.sharma@rkr-dining.com',
+              phone: '+91 98765 43210',
+              dob: '1995-08-15',
+              bio: 'Biryani connoisseur, lover of authentic Chettinad spices, saffron dum roasts and artisanal filter coffee.',
+              address: 'Villa 14, Royal Palm Avenue, Boat Club Road, RA Puram, Chennai - 600028',
+              loyaltyPoints: 750,
+              tier: 'Elite Gold',
+              avatar: '👑',
+              spiceLevel: 'Medium',
+              dietaryPreferences: ['non-veg', 'spicy']
+            }
+          }));
+        } else if (!parsed.token) {
+          parsed.token = 'vip-demo-token-rkr';
+          localStorage.setItem('user', JSON.stringify(parsed));
+        }
+      } catch (err) {
+        console.warn('Profile initialization note:', err);
+      }
+    })();
+  </script>
+</head>
+<body>
+
+<!-- ===== PRELOADER ===== -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="pl-logo">RKR</div>
+    <div class="pl-bar"><div class="pl-fill"></div></div>
+    <p class="pl-tagline">Loading your dashboard…</p>
+  </div>
+</div>
+
+<!-- ===== FLOATING HEADER ===== -->
+<header class="header" id="header">
+  <nav class="navbar container">
+    <a href="index.html" class="logo">
+      <span class="logo-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
+      <span class="logo-text">RKR<em>Restaurant</em></span>
+    </a>
+    <div class="nav-backdrop" id="navBackdrop"></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="menu.html#categories" class="nav-link">Categories</a></li>
+      <li><a href="offers.html" class="nav-link">Offers</a></li>
+      <li><a href="menu.html" class="nav-link">Menu</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="chefs.html" class="nav-link">Chefs</a></li>
+      <li><a href="reviews.html" class="nav-link">Reviews</a></li>
+      <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+      <li class="mobile-only"><a href="login.html" class="mob-btn mob-login">Login</a></li>
+      <li class="mobile-only"><a href="signup.html" class="mob-btn mob-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      <a href="login.html" class="ghost-btn">Login</a>
+      <a href="signup.html" class="fill-btn">Sign Up</a>
+      <a href="cart.html" class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<main class="page-fade-in" style="padding-top: 110px; min-height: 85vh; padding-bottom: 60px;">
+  <div class="container">
+
+    <!-- ===== TOP EXECUTIVE PROFILE HERO BANNER ===== -->
+    <section class="profile-hero-banner reveal-up">
+      <div class="profile-hero-content">
+        <div class="profile-hero-user">
+          <div class="profile-avatar-large">
+            <div class="avatar-circle" id="dbAvatarLarge" title="Click to change avatar">RS</div>
+            <button type="button" class="avatar-change-badge" id="openAvatarModalBtn" title="Choose Luxury Avatar Persona">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+            <div class="status-dot" title="Active Verified Account"></div>
+          </div>
+          <div class="profile-hero-info">
+            <h1>
+              <span id="welcomeUserName">Welcome Back</span>
+              <span class="profile-verified-chip"><i class="fa-solid fa-circle-check"></i> Verified Gourmet Diner</span>
+            </h1>
+            <div class="profile-hero-sub">
+              <span><i class="fa-regular fa-envelope"></i> <span id="dbUserEmailHeader">user@example.com</span></span>
+              <span class="sub-tag"><i class="fa-solid fa-crown"></i> <span id="userTierHeader">Elite Gold Member</span></span>
+              <span><i class="fa-regular fa-calendar"></i> <span id="dbMemberSinceHeader">Member since 2024</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-hero-actions">
+          <button type="button" class="profile-theme-pill" id="profileThemeToggleBtn" aria-label="Toggle Dark and Light theme">
+            <i class="fa-solid fa-moon"></i>
+            <span class="theme-text">Dark Mode</span>
+          </button>
+          <a href="menu.html" class="profile-hero-cta">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Browse Menu</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Ribbon -->
+      <div class="profile-metrics-grid">
+        <div class="metric-pill">
+          <div class="metric-icon-box"><i class="fa-solid fa-bag-shopping"></i></div>
+          <div class="metric-text">
+            <span>Lifetime Orders</span>
+            <strong id="statTotalOrders">0 Orders</strong>
+          </div>
+        </div>
+        <div class="metric-pill">
+          <div class="metric-icon-box"><i class="fa-solid fa-coins"></i></div>
+          <div class="metric-text">
+            <span>RKR Rewards</span>
+            <strong id="statLoyaltyPoints">750 Pts (₹75)</strong>
+          </div>
+        </div>
+        <div class="metric-pill">
+          <div class="metric-icon-box"><i class="fa-solid fa-crown"></i></div>
+          <div class="metric-text">
+            <span>Privilege Tier</span>
+            <strong id="statUserTier">Elite Gold</strong>
+          </div>
+        </div>
+        <div class="metric-pill">
+          <div class="metric-icon-box"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="metric-text">
+            <span>Delivery Coordinates</span>
+            <strong id="statAddressCount">0 Saved</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2-COLUMN DASHBOARD WRAPPER ===== -->
+    <div class="dashboard-wrap">
+      
+      <!-- DASHBOARD SIDEBAR -->
+      <aside class="db-sidebar reveal-left">
+        <div class="db-sidebar-mini-user">
+          <div class="db-avatar-wrap">
+            <div class="db-initials-avatar" id="dbAvatar">RS</div>
+          </div>
+          <h2 class="db-username-display" id="dbUserName">Customer</h2>
+          <p class="db-email-display" id="dbUserEmail">customer@example.com</p>
+          <span class="db-vip-badge"><i class="fa-solid fa-crown"></i> <span id="sidebarTierBadge">Elite Gold Member</span></span>
+          <span class="db-member-since" id="dbUserSince">Member since: 2024</span>
+
+          <!-- Level Progress Indicator -->
+          <div class="mini-level-card">
+            <div class="mini-level-header">
+              <span id="levelLabel">Gold Tier</span>
+              <span id="levelPointsText">750 / 1000 Pts</span>
+            </div>
+            <div class="mini-level-bar">
+              <div class="mini-level-fill" id="levelFillBar" style="width: 75%;"></div>
+            </div>
+            <span class="mini-level-help" id="levelHelpText">250 pts to Platinum Tier & VIP Perks</span>
+          </div>
+        </div>
+        
+        <nav class="db-nav">
+          <button class="db-nav-btn active" data-target="profile-details">
+            <span class="btn-left"><i class="fa-regular fa-user"></i> <span>Dining Profile & DNA</span></span>
+            <span class="db-nav-badge">Primary</span>
+          </button>
+          <button class="db-nav-btn" data-target="order-history">
+            <span class="btn-left"><i class="fa-solid fa-receipt"></i> <span>Order Vault & History</span></span>
+            <span class="db-nav-badge" id="orderCountBadge">Live</span>
+          </button>
+          <button class="db-nav-btn" data-target="loyalty-rewards">
+            <span class="btn-left"><i class="fa-solid fa-award"></i> <span>VIP Metal Pass</span></span>
+            <span class="db-nav-badge" id="sidebarPointsBadge">750 Pts</span>
+          </button>
+          <button class="db-nav-btn" data-target="address-book">
+            <span class="btn-left"><i class="fa-solid fa-map-location-dot"></i> <span>Delivery Hub</span></span>
+            <span class="db-nav-badge" id="addressCountBadge">0 Saved</span>
+          </button>
+          <button class="db-nav-btn" data-target="security-prefs">
+            <span class="btn-left"><i class="fa-solid fa-shield-halved"></i> <span>Security & Alerts</span></span>
+            <span class="db-nav-badge">Active</span>
+          </button>
+        </nav>
+
+        <div class="db-sidebar-actions">
+          <a href="menu.html" class="sidebar-cta-btn">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Browse Full Menu</span>
+          </a>
+          <button class="db-nav-btn logout-btn" id="dbLogoutBtn">
+            <span class="btn-left"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Logout Account</span></span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- DASHBOARD MAIN CONTENT PANELS -->
+      <section class="db-main reveal-right">
+        
+        <!-- TAB 1: DINING PROFILE & DNA -->
+        <div class="db-tab-content active" id="profile-details">
+          <div class="tab-header">
+            <h3>Account & Culinary Profile</h3>
+            <p>Personalize your verified details and dining instructions — synced directly to your database profile</p>
+          </div>
+          
+          <form class="db-form" id="profileForm" autocomplete="off">
+            <div class="profile-section-card">
+              <div class="section-card-title">
+                <i class="fa-regular fa-id-badge"></i>
+                <span>Personal Information</span>
+              </div>
+              
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="profName">Full Name *</label>
+                  <div class="input-wrap">
+                    <i class="fa-regular fa-user input-icon"></i>
+                    <input type="text" id="profName" required placeholder="Enter full name" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="profEmail">Email Address (Account ID)</label>
+                  <div class="input-wrap">
+                    <i class="fa-regular fa-envelope input-icon"></i>
+                    <input type="email" id="profEmail" required placeholder="Enter email address" disabled />
+                    <span class="input-badge-right"><i class="fa-solid fa-check"></i> Verified</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="profPhone">Mobile Phone Number</label>
+                  <div class="input-wrap">
+                    <i class="fa-solid fa-phone input-icon"></i>
+                    <input type="tel" id="profPhone" placeholder="Enter 10-digit mobile number" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="profDob">Date of Birth (Birthday Feast Treat)</label>
+                  <div class="input-wrap">
+                    <i class="fa-regular fa-calendar input-icon"></i>
+                    <input type="date" id="profDob" />
+                  </div>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                  <label for="profBio">Culinary Bio / Dining Motto</label>
+                  <div class="input-wrap">
+                    <i class="fa-regular fa-comment-dots input-icon" style="top: 24px;"></i>
+                    <textarea id="profBio" rows="2" placeholder="e.g. Biryani connoisseur, lover of authentic Chettinad spices and slow-cooked roasts..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-section-card">
+              <div class="section-card-title">
+                <i class="fa-solid fa-pepper-hot"></i>
+                <span>Spice Preference Level</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-3); margin-bottom: 12px;">
+                Choose your standard kitchen heat intensity for gravies, curries, and biryanis:
+              </p>
+              <div class="spice-pills-wrap" id="spicePills">
+                <div class="spice-pill" data-spice="Mild">🌱 Mild & Aromatic</div>
+                <div class="spice-pill selected" data-spice="Medium">🌶️ Medium Balanced</div>
+                <div class="spice-pill" data-spice="Hot">🔥 Fiery Chettinad Hot</div>
+                <div class="spice-pill" data-spice="Chef's Special">⚡ Chef's Royal Volcano</div>
+              </div>
+            </div>
+
+            <div class="profile-section-card">
+              <div class="section-card-title">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Dietary Preferences & Certifications</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-3); margin-bottom: 12px;">
+                Select your culinary preferences — our master chefs will respect these preparations on every order:
+              </p>
+              <div class="dietary-tags-wrap" id="dietaryTags">
+                <div class="diet-chip selected" data-pref="non-veg"><i class="fa-solid fa-drumstick-bite"></i> Non-Vegetarian</div>
+                <div class="diet-chip" data-pref="veg"><i class="fa-solid fa-leaf"></i> Pure Vegetarian</div>
+                <div class="diet-chip selected" data-pref="spicy"><i class="fa-solid fa-pepper-hot"></i> Medium Spicy</div>
+                <div class="diet-chip" data-pref="halal"><i class="fa-solid fa-check-double"></i> 100% Halal Certified</div>
+                <div class="diet-chip" data-pref="jain"><i class="fa-solid fa-seedling"></i> Jain Friendly (No Onion/Garlic)</div>
+                <div class="diet-chip" data-pref="no-nuts"><i class="fa-solid fa-ban"></i> Nut Free</div>
+                <div class="diet-chip" data-pref="gluten-free"><i class="fa-solid fa-wheat-awn-circle-exclamation"></i> Gluten Free</div>
+                <div class="diet-chip" data-pref="low-oil"><i class="fa-solid fa-heart-pulse"></i> Low Oil / Healthy</div>
+              </div>
+            </div>
+
+            <div class="profile-section-card">
+              <div class="section-card-title">
+                <i class="fa-solid fa-map-pin"></i>
+                <span>Primary Delivery Address</span>
+              </div>
+              <div class="form-group">
+                <label for="profAddress">Default Delivery Coordinates</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-house-chimney input-icon" style="top: 24px;"></i>
+                  <textarea id="profAddress" rows="2" placeholder="Enter flat/door number, building, street, landmark & city"></textarea>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-action" style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 14px;">
+              <button type="submit" class="btn-primary" id="saveProfileBtn" style="padding: 13px 32px; font-size: 1rem;">
+                <span>Save All Changes to Database</span>
+                <i class="fa-solid fa-floppy-disk"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- TAB 2: REAL-TIME ORDER VAULT & HISTORY -->
+        <div class="db-tab-content" id="order-history">
+          <div class="tab-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h3>Real-Time Order Vault</h3>
+              <p>Review past gourmet feasts directly from database, track live cooking, or re-order in 1-click</p>
+            </div>
+            <a href="menu.html" class="btn-primary" style="padding: 10px 20px; font-size: 0.9rem; text-decoration: none;">
+              <i class="fa-solid fa-plus"></i> Order New Dish
+            </a>
+          </div>
+
+          <!-- Order Status Filters -->
+          <div class="order-history-filter-bar">
+            <button class="order-filter-pill active" data-filter="all">All Orders (<span id="allOrdersCount">0</span>)</button>
+            <button class="order-filter-pill" data-filter="active">In Kitchen / Active</button>
+            <button class="order-filter-pill" data-filter="delivered">Delivered</button>
+          </div>
+          
+          <div class="orders-history-list" id="ordersHistoryList">
+            <div class="orders-loading" style="text-align: center; padding: 50px 20px; color: var(--amber);">
+              <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 36px; margin-bottom: 14px; display: inline-block;"></i>
+              <p style="font-weight: 500; font-size: 1.05rem; color: var(--text-2);">Synchronizing your order records from database...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: LOYALTY & REWARDS (APPLE-WALLET METAL VIP CARD) -->
+        <div class="db-tab-content" id="loyalty-rewards">
+          <div class="tab-header">
+            <h3>Digital VIP Membership & Perks</h3>
+            <p>Your contactless luxury dining pass and redeemable reward vouchers</p>
+          </div>
+          
+          <!-- Realistic Apple-Wallet Style Metal VIP Card -->
+          <div class="vip-metal-card">
+            <div class="metal-card-header">
+              <div class="metal-brand">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+                <span>RKR ROYAL PRIVILEGE</span>
+              </div>
+              <span class="metal-tier-badge" id="cardTierBadge"><i class="fa-solid fa-crown"></i> Elite Gold</span>
+            </div>
+
+            <div class="metal-chip-row">
+              <div class="emv-chip"></div>
+              <i class="fa-solid fa-wifi rfid-wave"></i>
+            </div>
+
+            <div class="metal-card-number" id="metalCardNumber">
+              4920 &nbsp; 8812 &nbsp; 5491 &nbsp; 8492
+            </div>
+
+            <div class="metal-card-footer">
+              <div class="card-holder-info">
+                <label>Cardholder</label>
+                <strong id="vipMemberCardName">VIP MEMBER</strong>
+              </div>
+              <div class="card-valid-info">
+                <label>Status / Validity</label>
+                <strong>LIFETIME PASS</strong>
+              </div>
+              <div class="loyalty-card-barcode" style="font-size: 26px; color: #ffd080;">
+                <i class="fa-solid fa-barcode"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tier Progress Milestones -->
+          <div class="profile-section-card" style="margin-bottom: 28px;">
+            <div class="section-card-title">
+              <i class="fa-solid fa-stairs"></i>
+              <span>Membership Tier Progression</span>
+            </div>
+            <div class="loyalty-progress-wrap" style="margin-bottom: 12px;">
+              <div class="progress-bar-label" style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 8px;">
+                <span>Current Tier: <strong id="progressCurrentTier" style="color:var(--amber);">Gold (750 Pts)</strong></span>
+                <span>Next Milestone: <strong id="progressNextTier" style="color:#ffd080;">Platinum (1,000 Pts)</strong></span>
+              </div>
+              <div class="progress-bar-bg" style="height: 9px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow:hidden;">
+                <div class="progress-bar-fill" id="tierProgressFill" style="width: 75%; height: 100%; background: linear-gradient(90deg, #ffd080, #ff8c00);"></div>
+              </div>
+            </div>
+            <p style="font-size: 0.84rem; color: var(--text-3);" id="tierPointsRemainingText">
+              You are just 250 points away from unlocking complimentary chef's banquet dessert & zero delivery fees on all orders.
+            </p>
+          </div>
+
+          <!-- Exclusive Member Coupons -->
+          <div class="section-card-title" style="margin-bottom: 16px;">
+            <i class="fa-solid fa-tags"></i>
+            <span>Exclusive VIP Promo Codes</span>
+          </div>
+          <div class="coupons-grid">
+            <div class="coupon-ticket">
+              <span class="coupon-badge">10% Flat Savings</span>
+              <h4 class="coupon-title">VIP Elite Discount</h4>
+              <p style="font-size: 0.8rem; color: var(--text-3);">Valid on all orders above ₹299</p>
+              <div class="coupon-code-row">
+                <span class="coupon-code">ROYAL10</span>
+                <button class="copy-coupon-btn" onclick="copyCouponCode('ROYAL10')">Copy</button>
+              </div>
+            </div>
+            <div class="coupon-ticket">
+              <span class="coupon-badge">Free Shipping</span>
+              <h4 class="coupon-title">Zero Delivery Fee</h4>
+              <p style="font-size: 0.8rem; color: var(--text-3);">Instant free express delivery</p>
+              <div class="coupon-code-row">
+                <span class="coupon-code">FREEDEL</span>
+                <button class="copy-coupon-btn" onclick="copyCouponCode('FREEDEL')">Copy</button>
+              </div>
+            </div>
+            <div class="coupon-ticket">
+              <span class="coupon-badge">Chef's Treat</span>
+              <h4 class="coupon-title">Free Samosa Plate</h4>
+              <p style="font-size: 0.8rem; color: var(--text-3);">With any Biryani purchase</p>
+              <div class="coupon-code-row">
+                <span class="coupon-code">CHEFGIFT</span>
+                <button class="copy-coupon-btn" onclick="copyCouponCode('CHEFGIFT')">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: ADDRESS BOOK (DELIVERY HUB - PERSISTENT TO MONGODB) -->
+        <div class="db-tab-content" id="address-book">
+          <div class="tab-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h3>Saved Delivery Coordinates</h3>
+              <p>Manage multiple residential, office, or dining destinations stored permanently in your database profile</p>
+            </div>
+            <button class="btn-primary" id="addAddressBtn" style="padding: 10px 20px; font-size: 0.9rem;">
+              <i class="fa-solid fa-plus"></i> Add New Coordinate
+            </button>
+          </div>
+          
+          <div class="address-grid" id="addressGrid">
+            <!-- Dynamic Addresses Injected Here from MongoDB -->
+          </div>
+
+          <!-- Add Address Form (Interactive inline) -->
+          <div class="profile-section-card" id="newAddressCard" style="display: none; margin-top: 24px;">
+            <div class="section-card-title">
+              <i class="fa-solid fa-map-location-dot"></i>
+              <span>Add New Delivery Coordinate to Database</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="newAddrLabel">Location Label (e.g. Home, Office, Beach House)</label>
+                <input type="text" id="newAddrLabel" placeholder="e.g. Residence, Work Office, Guest House" />
+              </div>
+              <div class="form-group">
+                <label for="newAddrCity">City & Postal Pincode</label>
+                <input type="text" id="newAddrCity" placeholder="e.g. Chennai - 600028" />
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="newAddrDetails">Detailed Street / Building Address *</label>
+                <textarea id="newAddrDetails" rows="2" placeholder="Door No, Apartment, Street, Landmark"></textarea>
+              </div>
+            </div>
+            <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 10px;">
+              <button type="button" class="addr-btn" id="cancelAddAddrBtn" style="padding: 9px 18px; width: auto; height: auto;">Cancel</button>
+              <button type="button" class="btn-primary" id="saveNewAddrBtn" style="padding: 9px 22px;">Save to Database</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: SECURITY & CREDENTIALS -->
+        <div class="db-tab-content" id="security-prefs">
+          <div class="tab-header">
+            <h3>Security & Password Vault</h3>
+            <p>Update your encrypted account credentials and delivery alert preferences</p>
+          </div>
+
+          <div class="profile-section-card">
+            <div class="section-card-title">
+              <i class="fa-solid fa-lock"></i>
+              <span>Change Account Password</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="currPassword">Current Password *</label>
+                <input type="password" id="currPassword" placeholder="••••••••" />
+              </div>
+              <div class="form-group">
+                <label for="newPassword">New Password (Min 6 characters) *</label>
+                <input type="password" id="newPassword" placeholder="Enter new strong password" />
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="confirmPassword">Confirm New Password *</label>
+                <input type="password" id="confirmPassword" placeholder="Re-enter new password" />
+              </div>
+            </div>
+            <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
+              <button type="button" class="btn-primary" id="updatePasswordBtn" style="padding: 11px 24px; font-size: 0.92rem;">
+                <i class="fa-solid fa-key"></i> <span>Update Encrypted Password</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="profile-section-card">
+            <div class="section-card-title">
+              <i class="fa-solid fa-bell"></i>
+              <span>Dining & Order Alerts</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <strong class="alert-title">WhatsApp Real-Time Kitchen & Rider Updates</strong>
+                  <span style="color: var(--text-3); font-size: 0.82rem;">Receive live cooking confirmations and driver GPS ETA</span>
+                </div>
+                <input type="checkbox" id="notifWhatsapp" checked style="width: 22px; height: 22px; accent-color: var(--amber); cursor: pointer;" />
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px;">
+                <div>
+                  <strong class="alert-title">Chef's Weekend Specials & Secret Promo Vouchers</strong>
+                  <span style="color: var(--text-3); font-size: 0.82rem;">Curated invitations to seasonal biryani launches and discount codes</span>
+                </div>
+                <input type="checkbox" id="notifPromo" checked style="width: 22px; height: 22px; accent-color: var(--amber); cursor: pointer;" />
+              </div>
+            </div>
+            <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
+              <button type="button" class="btn-primary" id="saveNotifBtn" style="padding: 10px 20px; font-size: 0.9rem;">
+                <i class="fa-solid fa-check"></i> <span>Save Alert Preferences</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- ===== AVATAR STUDIO MODAL ===== -->
+<div class="avatar-modal-backdrop" id="avatarModal">
+  <div class="avatar-modal-box">
+    <div class="avatar-modal-title">
+      <h3>Select Dining Persona</h3>
+      <button type="button" class="addr-btn" id="closeAvatarModalBtn" style="font-size: 16px;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-3); margin-bottom: 18px;">
+      Choose a luxury avatar persona to represent your culinary profile across RKR Restaurant:
+    </p>
+    <div class="avatar-preset-grid" id="avatarPresetGrid">
+      <div class="avatar-preset-item selected" data-icon="👑">
+        <span class="avatar-preset-icon">👑</span>
+        <span class="avatar-preset-label">Royal Gourmet</span>
+      </div>
+      <div class="avatar-preset-item" data-icon="👨‍🍳">
+        <span class="avatar-preset-icon">👨‍🍳</span>
+        <span class="avatar-preset-label">Master Chef</span>
+      </div>
+      <div class="avatar-preset-item" data-icon="🔥">
+        <span class="avatar-preset-icon">🔥</span>
+        <span class="avatar-preset-label">Spice Master</span>
+      </div>
+      <div class="avatar-preset-item" data-icon="💎">
+        <span class="avatar-preset-icon">💎</span>
+        <span class="avatar-preset-label">Diamond VIP</span>
+      </div>
+      <div class="avatar-preset-item" data-icon="🍷">
+        <span class="avatar-preset-icon">🍷</span>
+        <span class="avatar-preset-label">Connoisseur</span>
+      </div>
+      <div class="avatar-preset-item" data-icon="INITIALS">
+        <span class="avatar-preset-icon">🔤</span>
+        <span class="avatar-preset-label">Initials Monogram</span>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+      <button type="button" class="addr-btn" id="cancelAvatarBtn" style="padding: 10px 18px; width: auto; height: auto;">Cancel</button>
+      <button type="button" class="btn-primary" id="saveAvatarBtn" style="padding: 10px 22px;">Apply Persona</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== OFFICIAL LUXURY INVOICE / RECEIPT MODAL ===== -->
+<div class="receipt-modal-backdrop" id="receiptModal">
+  <div class="receipt-paper" id="receiptPaper">
+    <div class="receipt-header">
+      <div class="receipt-brand-logo">RKR <span>RESTAURANT</span></div>
+      <p style="font-size: 0.8rem; color: #777; margin-top: 4px;">Grand Gourmet & Fine Dining Kitchens</p>
+      <p style="font-size: 0.75rem; color: #999;">GSTIN: 33AAECR1294F1Z8 • Chennai, Tamil Nadu</p>
+    </div>
+
+    <div class="receipt-meta-grid">
+      <div>
+        <span>Invoice No:</span> <strong id="recInvoiceId">#RKR-000000</strong><br>
+        <span>Date:</span> <strong id="recDate">--</strong>
+      </div>
+      <div style="text-align: right;">
+        <span>Customer:</span> <strong id="recCustName">--</strong><br>
+        <span>Status:</span> <strong id="recStatus" style="color:#16a34a;">PAID / CONFIRMED</strong>
+      </div>
+    </div>
+
+    <table class="receipt-table">
+      <thead>
+        <tr>
+          <th>Dish</th>
+          <th class="num-col">Qty</th>
+          <th class="num-col">Price</th>
+          <th class="num-col">Total</th>
+        </tr>
+      </thead>
+      <tbody id="recItemsBody">
+        <!-- Receipt items injected dynamically -->
+      </tbody>
+    </table>
+
+    <div class="receipt-summary-rows">
+      <div class="receipt-row">
+        <span>Items Subtotal:</span>
+        <strong id="recSubtotal">₹0</strong>
+      </div>
+      <div class="receipt-row">
+        <span>CGST + SGST (5%):</span>
+        <strong id="recGst">₹0</strong>
+      </div>
+      <div class="receipt-row">
+        <span>Delivery & Packaging:</span>
+        <strong id="recDelivery">₹50</strong>
+      </div>
+      <div class="receipt-row" id="recDiscountRow" style="display: none; color: #16a34a;">
+        <span>VIP Promo Discount:</span>
+        <strong id="recDiscount">-₹0</strong>
+      </div>
+      <div class="receipt-row grand-total">
+        <span>Net Grand Total:</span>
+        <strong id="recGrandTotal" style="color: #d97706;">₹0</strong>
+      </div>
+    </div>
+
+    <div class="receipt-footer-notes">
+      <p>Thank you for dining with RKR Restaurant! 🌟</p>
+      <p>For assistance or table reservations, WhatsApp +91 98765 43210</p>
+    </div>
+
+    <div class="receipt-actions">
+      <button type="button" class="receipt-print-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Official Invoice</button>
+      <button type="button" class="receipt-close-btn" id="closeReceiptBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer" style="margin-top: 80px;">
+  <div class="footer-top">
+    <div class="container footer-grid">
+      <!-- BRAND -->
+      <div class="f-col f-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
+          <span class="logo-text">RKR<em>Restaurant</em></span>
+        </a>
+        <p>Premium flavours, lightning delivery, and unforgettable dining experiences. Chennai's favourite restaurant since 2018.</p>
+        <div class="f-socials">
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+      <!-- NAVIGATION -->
+      <div class="f-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="offers.html">Offers</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <!-- OPENING HOURS -->
+      <div class="f-col">
+        <h4>Opening Hours</h4>
+        <div class="f-hours">
+          <span>Mon – Fri</span>
+          <span>10:00 AM – 11:00 PM</span>
+          <span>Sat – Sun</span>
+          <span>9:00 AM – 11:30 PM</span>
+        </div>
+      </div>
+      <!-- NEWSLETTER -->
+      <div class="f-col">
+        <h4>Newsletter</h4>
+        <p>Subscribe to receive exclusive offers and latest updates.</p>
+        <div class="f-newsletter">
+          <input type="email" placeholder="your@email.com" id="newsletterInput" />
+          <button id="newsletterBtn" aria-label="Subscribe"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container footer-bottom-wrap">
+      <p>© 2026 RKR Restaurant — All Rights Reserved. Made with <i class="fa-solid fa-heart" style="color:#ef4444"></i> in Chennai.</p>
+      <div class="f-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Use</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast">
+  <i class="fa-solid fa-circle-check"></i>
+  <span id="toastMsg">Done!</span>
+</div>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3><i class="fa-solid fa-bag-shopping"></i> Your Cart</h3>
+    <button id="cartClose"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter">
+    <div class="cart-total">Total: <span id="cartTotal">₹0</span></div>
+    <a href="cart.html" class="btn-primary" style="width:100%;justify-content:center">Proceed to Checkout</a>
+  </div>
+</div>
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay"></div>
+
+<!-- ===== BACK TO TOP ===== -->
+<button class="top-btn" id="topBtn" aria-label="Back to top"><i class="fa-solid fa-chevron-up"></i></button>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

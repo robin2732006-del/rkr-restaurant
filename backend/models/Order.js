@@ -51,6 +51,16 @@ const orderSchema = new mongoose.Schema(
     status: {
         type: String,
         default: "Pending"
+    },
+
+    couponCode: {
+        type: String,
+        default: ""
+    },
+
+    discount: {
+        type: Number,
+        default: 0
     }
 
 },

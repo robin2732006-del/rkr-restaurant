@@ -163,3 +163,20 @@ function showMessage(message, type) {
         }, 400);
     }, 3000);
 }
+
+/* ENTER KEY AND FORM SUBMIT LISTENER */
+document.addEventListener("DOMContentLoaded", () => {
+    const forgotForm = document.getElementById("forgotForm");
+    if (forgotForm) {
+        forgotForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            sendResetLink();
+        });
+        forgotForm.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                sendResetLink();
+            }
+        });
+    }
+});

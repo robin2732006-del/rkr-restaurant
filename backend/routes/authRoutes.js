@@ -4,8 +4,13 @@ const router = express.Router();
 
 const {
     signup,
-    login
+    login,
+    getProfile,
+    updateProfile,
+    changePassword
 } = require("../controllers/authController");
+
+const authMiddleware = require("../middleware/authMiddleware");
 
 /* =========================================================
    SIGNUP
@@ -23,13 +28,8 @@ router.post("/login", login);
    PROFILE
 ========================================================= */
 
-router.get("/profile", (req, res) => {
-
-    res.status(200).json({
-        success: true,
-        message: "Profile Route Working"
-    });
-
-});
+router.get("/profile", authMiddleware, getProfile);
+router.put("/profile", authMiddleware, updateProfile);
+router.put("/change-password", authMiddleware, changePassword);
 
 module.exports = router;

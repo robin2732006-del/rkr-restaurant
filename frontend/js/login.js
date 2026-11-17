@@ -1,3 +1,16 @@
+// Ensure getApiUrl is defined even if loaded standalone
+if (typeof getApiUrl !== 'function') {
+    window.getApiUrl = function(path) {
+        const hostname = window.location.hostname;
+        const isLocal = !hostname || 
+                        window.location.protocol === 'file:' || 
+                        hostname === 'localhost' || 
+                        hostname === '127.0.0.1';
+        const base = isLocal ? 'http://localhost:5000' : 'https://rkr-restaurant-backend.onrender.com';
+        return base + path;
+    };
+}
+
 async function loginUser(){
 
     const email =
@@ -47,7 +60,7 @@ async function loginUser(){
 
         const response =
         await fetch(
-        "https://rkr-restaurant-backend.onrender.com/api/auth/login",
+        getApiUrl("/api/auth/login"),
 
         {
             method:"POST",
@@ -238,3 +251,20 @@ function showMessage(message, type) {
         }, 400);
     }, 3000);
 }
+
+/* ENTER KEY AND FORM SUBMIT LISTENER */
+document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) {
+        loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            loginUser();
+        });
+        loginForm.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                loginUser();
+            }
+        });
+    }
+});

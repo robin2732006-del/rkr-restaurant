@@ -14,7 +14,13 @@ const foodSchema = new mongoose.Schema({
 
     rating: { type: Number, default: 4.8 },
 
-    tag: { type: String, default: "" }
+    tag: { type: String, default: "" },
+
+    ingredients: [{ type: String }],
+
+    diet: { type: String, default: "Vegetarian" },
+
+    spice: { type: String, default: "Medium" }
 
 }, {
     timestamps: true

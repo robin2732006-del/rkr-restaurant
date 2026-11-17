@@ -1,5 +1,5 @@
 /* ============================================================
-   RKR RESTAURANT — SECURE CHECKOUT & ORDERS SYSTEM
+   RKR RESTAURANT — SECURE CHECKOUT & PREVIOUS ORDERS SYSTEM
    ============================================================ */
 
 'use strict';
@@ -10,8 +10,9 @@ const LAST_ORDER_KEY = 'last-order';
 document.addEventListener('DOMContentLoaded', () => {
 
     let cart = getCart();
+    let loadedOrders = [];
 
-    // DOM ELEMENTS
+    // DOM ELEMENTS - CHECKOUT
     const itemsCountEl = document.getElementById('order-items-count');
     const itemsContainer = document.getElementById('order-items-container');
     const subtotalEl = document.getElementById('checkout-subtotal');
@@ -26,11 +27,100 @@ document.addEventListener('DOMContentLoaded', () => {
     const deliveryForm = document.getElementById('deliveryForm');
     const paymentMethodsContainer = document.getElementById('payment-methods');
 
+    // DOM ELEMENTS - TABS & VIEWS
+    const tabCheckoutBtn = document.getElementById('tabCheckoutBtn');
+    const tabHistoryBtn = document.getElementById('tabHistoryBtn');
+    const tabCartBadge = document.getElementById('tabCartBadge');
+    const tabHistoryBadge = document.getElementById('tabHistoryBadge');
+    const checkoutViewWrapper = document.getElementById('checkoutViewWrapper');
+    const historyViewWrapper = document.getElementById('historyViewWrapper');
+    const ordersHistoryListContainer = document.getElementById('ordersHistoryListContainer');
+    const ordersHistoryStatusText = document.getElementById('ordersHistoryStatusText');
+
     let activeDiscount = 0;
     let activeCouponCode = '';
 
+    /* ==========================================
+       TAB SWITCHER LOGIC
+       ========================================== */
+    function switchTab(targetTab) {
+        if (targetTab === 'history') {
+            if (checkoutViewWrapper) checkoutViewWrapper.style.display = 'none';
+            if (historyViewWrapper) historyViewWrapper.style.display = 'block';
+
+            if (tabCheckoutBtn) {
+                tabCheckoutBtn.style.background = 'var(--card)';
+                tabCheckoutBtn.style.color = 'var(--text)';
+                tabCheckoutBtn.classList.remove('active');
+            }
+            if (tabHistoryBtn) {
+                tabHistoryBtn.style.background = 'var(--primary)';
+                tabHistoryBtn.style.color = '#fff';
+                tabHistoryBtn.classList.add('active');
+            }
+            loadPreviousOrders();
+        } else {
+            if (checkoutViewWrapper) checkoutViewWrapper.style.display = 'grid';
+            if (historyViewWrapper) historyViewWrapper.style.display = 'none';
+
+            if (tabCheckoutBtn) {
+                tabCheckoutBtn.style.background = 'var(--primary)';
+                tabCheckoutBtn.style.color = '#fff';
+                tabCheckoutBtn.classList.add('active');
+            }
+            if (tabHistoryBtn) {
+                tabHistoryBtn.style.background = 'var(--card)';
+                tabHistoryBtn.style.color = 'var(--text)';
+                tabHistoryBtn.classList.remove('active');
+            }
+        }
+    }
+
+    if (tabCheckoutBtn) {
+        tabCheckoutBtn.addEventListener('click', () => switchTab('checkout'));
+    }
+    if (tabHistoryBtn) {
+        tabHistoryBtn.addEventListener('click', () => switchTab('history'));
+    }
+
+    // Prefill delivery info from logged-in user profile details
+    function prefillDeliveryInfo() {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                const userData = JSON.parse(storedUser);
+                const user = userData.user || userData;
+                if (user) {
+                    const nameInput = document.getElementById('delivery-name');
+                    const emailInput = document.getElementById('delivery-email');
+                    const phoneInput = document.getElementById('delivery-phone');
+                    const addressInput = document.getElementById('delivery-address');
+
+                    if (nameInput && user.name) nameInput.value = user.name;
+                    if (emailInput && user.email) emailInput.value = user.email;
+                    if (phoneInput && user.phone) phoneInput.value = user.phone;
+                    if (addressInput && user.address) addressInput.value = user.address;
+                }
+            } catch (err) {
+                console.error('Error parsing user data for checkout prefill:', err);
+            }
+        }
+    }
+
     // Initialize Page
     renderCheckout();
+    prefillDeliveryInfo();
+    updateCartBadge();
+
+    // Auto-switch to history if cart is empty or URL contains hash #history or ?tab=history
+    const urlParams = new URLSearchParams(window.location.search);
+    if (window.location.hash === '#history' || urlParams.get('tab') === 'history' || cart.length === 0) {
+        switchTab('history');
+    } else {
+        switchTab('checkout');
+        // Still load past orders in background to show the badge count!
+        loadPreviousOrders(true);
+    }
 
     /* ==========================================
        GET CART
@@ -56,6 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================== */
     function saveCart() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        updateCartBadge();
+    }
+
+    function updateCartBadge() {
+        const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+        if (tabCartBadge) {
+            tabCartBadge.textContent = totalCount;
+        }
     }
 
     /* ==========================================
@@ -66,12 +164,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (cart.length === 0) {
             itemsContainer.innerHTML = `
-                <div style="padding: 40px; text-align: center; color: #a1a1aa;">
-                    <i class="fa-solid fa-cart-shopping" style="font-size: 40px; margin-bottom: 15px; display: block; color: var(--primary);"></i>
-                    <p>Your checkout session is empty.</p>
-                    <a href="index.html" class="btn-primary" style="display: inline-block; margin-top: 15px; text-decoration: none;">Browse Menu</a>
+                <div style="padding: 40px; text-align: center; color: var(--text-light);">
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 44px; margin-bottom: 16px; display: block; color: var(--primary);"></i>
+                    <h3 style="margin-bottom: 8px; color: var(--text);">Your Cart is Currently Empty</h3>
+                    <p style="margin-bottom: 20px;">Add freshly prepared signature dishes to start an order, or review your previous orders.</p>
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                        <a href="menu.html" class="btn-primary" style="text-decoration: none; padding: 12px 24px;">Explore 30 Dishes</a>
+                        <button class="btn-ghost" id="viewHistoryEmptyBtn" style="padding: 12px 24px; cursor: pointer;">View Order History</button>
+                    </div>
                 </div>
             `;
+            const vBtn = document.getElementById('viewHistoryEmptyBtn');
+            if (vBtn) vBtn.addEventListener('click', () => switchTab('history'));
+
             if (itemsCountEl) itemsCountEl.textContent = '0 Items';
             updateTotals(0);
             return;
@@ -85,27 +190,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Render food items
         itemsContainer.innerHTML = cart.map(item => `
-            <div class="cart-item" data-id="${item.id}">
-                <div class="cart-img">
-                    <img src="${item.image}" alt="${item.name}">
+            <div class="cart-item" data-id="${item.id}" style="display: flex; align-items: center; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--border);">
+                <div class="cart-img" style="width: 80px; height: 80px; min-width: 80px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border);">
+                    <img src="${item.image || 'images/dishes/hyderabadi_biryani.jpg'}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <div class="cart-content">
-                    <div class="cart-top">
+                <div class="cart-content" style="flex: 1;">
+                    <div class="cart-top" style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
-                            <h3>${item.name}</h3>
-                            <p>${item.description || 'Premium freshly crafted dish'}</p>
+                            <h3 style="font-size: 1.15rem; margin-bottom: 4px; color: var(--text);">${item.name}</h3>
+                            <p style="font-size: 0.88rem; color: var(--text-light);">${item.description || 'Crafted with premium ingredients'}</p>
                         </div>
-                        <button class="remove-btn" data-id="${item.id}">
-                            <i class="fa-solid fa-trash"></i>
+                        <button class="remove-btn" data-id="${item.id}" style="background: rgba(239,68,68,0.12); color: #ef4444; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove dish">
+                            <i class="fa-solid fa-trash" style="font-size: 0.9rem;"></i>
                         </button>
                     </div>
-                    <div class="cart-bottom">
-                        <div class="qty-box">
-                            <button class="qty-btn minus" data-id="${item.id}">-</button>
-                            <span class="qty">${item.quantity}</span>
-                            <button class="qty-btn plus" data-id="${item.id}">+</button>
+                    <div class="cart-bottom" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                        <div class="qty-box" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 50px; border: 1px solid var(--border);">
+                            <button class="qty-btn minus" data-id="${item.id}" style="background: none; border: none; color: var(--text); font-size: 1.1rem; cursor: pointer; width: 24px; height: 24px;">-</button>
+                            <span class="qty" style="font-weight: 700; min-width: 20px; text-align: center;">${item.quantity}</span>
+                            <button class="qty-btn plus" data-id="${item.id}" style="background: none; border: none; color: var(--text); font-size: 1.1rem; cursor: pointer; width: 24px; height: 24px;">+</button>
                         </div>
-                        <div class="price">₹${item.price * item.quantity}</div>
+                        <div class="price" style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">₹${item.price * item.quantity}</div>
                     </div>
                 </div>
             </div>
@@ -157,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
        BIND INCREMENT / DECREMENT / REMOVE ACTIONS
        ========================================== */
     function bindCheckoutActions() {
-        // Quantity Plus
         document.querySelectorAll('.qty-btn.plus').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.dataset.id;
@@ -170,7 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Quantity Minus
         document.querySelectorAll('.qty-btn.minus').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.dataset.id;
@@ -186,21 +289,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Remove button
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.dataset.id;
                 const itemEl = btn.closest('.cart-item');
                 if (itemEl) {
                     itemEl.style.opacity = '0';
-                    itemEl.style.transform = 'translateX(40px)';
-                    itemEl.style.transition = 'all 0.3s ease';
+                    itemEl.style.transform = 'translateX(30px)';
+                    itemEl.style.transition = 'all 0.25s ease';
 
                     setTimeout(() => {
                         cart = cart.filter(i => i.id !== id);
                         saveCart();
                         renderCheckout();
-                    }, 300);
+                    }, 250);
                 }
             });
         });
@@ -214,19 +316,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const code = couponInput.value.trim().toUpperCase();
 
             if (cart.length === 0) {
-                alert('Add items to your cart first!');
+                alert('Add dishes to your cart first!');
                 return;
             }
 
             if (code === 'RKR50') {
                 activeCouponCode = 'RKR50';
-                alert('Coupon code applied! Flat ₹50 discount added 🎉');
+                alert('Coupon applied! Flat ₹50 discount 🎉');
             } else if (code === 'WELCOME10') {
                 activeCouponCode = 'WELCOME10';
-                alert('Coupon code applied! 10% discount on dishes added 🎉');
+                alert('Coupon applied! 10% dining discount 🎉');
             } else if (code === '') {
                 activeCouponCode = '';
-                alert('Coupon cleared.');
+                alert('Coupon removed.');
             } else {
                 alert('Invalid Coupon Code! Try RKR50 or WELCOME10.');
                 activeCouponCode = '';
@@ -252,63 +354,68 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================
-       PLACE ORDER
+       PLACE ORDER (SAVES TO MONGODB & USER)
        ========================================== */
     if (placeOrderBtn) {
         placeOrderBtn.addEventListener('click', async (e) => {
             e.preventDefault();
 
             if (cart.length === 0) {
-                alert('Cart is empty');
+                alert('Your cart is empty. Please add items before placing an order.');
                 return;
             }
 
-            const name    = document.getElementById('delivery-name').value.trim();
-            const email   = document.getElementById('delivery-email').value.trim();
-            const phone   = document.getElementById('delivery-phone').value.trim();
-            const address = document.getElementById('delivery-address').value.trim();
+            const name    = document.getElementById('delivery-name')?.value.trim();
+            const email   = document.getElementById('delivery-email')?.value.trim();
+            const phone   = document.getElementById('delivery-phone')?.value.trim();
+            const address = document.getElementById('delivery-address')?.value.trim();
 
             if (!name || !email || !phone || !address) {
-                alert('Please fill in all delivery fields.');
+                alert('Please provide your complete delivery name, email, phone, and address.');
                 return;
             }
 
-            // Basic email validation
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 alert('Please enter a valid email address.');
                 return;
             }
 
-            // Basic phone validation (10 digits)
-            if (!/^\d{10}$/.test(phone)) {
-                alert('Please enter a valid 10-digit phone number.');
+            const storedUser = localStorage.getItem('user');
+            if (!storedUser) {
+                alert('Please log in or create an account to complete your order.');
+                window.location.href = 'login.html';
                 return;
             }
 
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user || !user.token) {
-                alert('Please login first.');
+            let token = null;
+            try {
+                const parsed = JSON.parse(storedUser);
+                token = parsed.token;
+            } catch (err) {
+                console.error(err);
+            }
+
+            if (!token) {
+                alert('Session expired. Please log in again.');
+                window.location.href = 'login.html';
                 return;
             }
 
             const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
             const deliveryFee = 50;
-
-            // ✅ Consistent with updateTotals() — GST applied on discounted subtotal
             const discountedSubtotal = Math.max(0, subtotal - activeDiscount);
             const gst = Math.round(discountedSubtotal * 0.05);
             const total = discountedSubtotal + deliveryFee + gst;
 
-            // Disable button to prevent double submission
             placeOrderBtn.disabled = true;
-            placeOrderBtn.textContent = 'Placing Order...';
+            placeOrderBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Placing Secure Order...';
 
             try {
-                const response = await fetch('https://rkr-restaurant-backend.onrender.com/api/orders', {
+                const response = await fetch(getApiUrl('/api/orders'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${user.token}`
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
                         items: cart.map(item => ({
@@ -321,7 +428,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         totalAmount: total,
                         couponCode: activeCouponCode || null,
                         discount: activeDiscount,
-                        deliveryInfo: { name, email, phone, address }
+                        deliveryInfo: { name, email, phone, address },
+                        status: 'Confirmed'
                     })
                 });
 
@@ -331,22 +439,208 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(data.message || 'Order placement failed.');
                 }
 
-                // ✅ Use constants instead of magic strings
                 localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(data.order));
                 localStorage.removeItem(STORAGE_KEY);
+                cart = [];
+                updateCartBadge();
 
-                alert('Order placed successfully! 🎉');
+                alert('Order Placed Successfully! 🎉 Saved to your account history.');
                 window.location.href = 'success.html';
 
             } catch (err) {
                 console.error('Order Error:', err);
                 alert(`Order failed: ${err.message}`);
             } finally {
-                // Re-enable button in case user stays on page
                 placeOrderBtn.disabled = false;
-                placeOrderBtn.textContent = 'Place Order';
+                placeOrderBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Place Secure Order';
             }
         });
     }
+
+    /* ==========================================
+       LOAD PREVIOUS ORDERS FROM MONGODB
+       ========================================== */
+    async function loadPreviousOrders(silent = false) {
+        if (!ordersHistoryListContainer) return;
+
+        const storedUser = localStorage.getItem('user');
+        if (!storedUser) {
+            if (!silent) {
+                ordersHistoryListContainer.innerHTML = `
+                    <div class="glass-card" style="text-align: center; padding: 50px 20px;">
+                        <i class="fa-solid fa-user-lock" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 18px;"></i>
+                        <h3 style="font-size: 1.45rem; margin-bottom: 10px; color: var(--text);">Sign In to View Your Orders</h3>
+                        <p style="color: var(--text-light); max-width: 480px; margin: 0 auto 24px; font-size: 1rem;">
+                            Your orders and favorite dishes are linked to your account. Log in to track past deliveries and re-order with 1 click.
+                        </p>
+                        <a href="login.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 28px;">
+                            <i class="fa-solid fa-sign-in-alt"></i> Login to Account
+                        </a>
+                    </div>
+                `;
+            }
+            if (tabHistoryBadge) tabHistoryBadge.style.display = 'none';
+            return;
+        }
+
+        let token = null;
+        try {
+            const parsed = JSON.parse(storedUser);
+            token = parsed.token;
+        } catch (e) {
+            console.error(e);
+        }
+
+        if (!token) return;
+
+        try {
+            const response = await fetch(getApiUrl('/api/orders'), {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Failed to fetch order history');
+
+            loadedOrders = data.orders || [];
+
+            // Update badge count
+            if (tabHistoryBadge) {
+                tabHistoryBadge.textContent = loadedOrders.length;
+                tabHistoryBadge.style.display = loadedOrders.length > 0 ? 'inline-block' : 'none';
+            }
+
+            if (silent) return;
+
+            if (loadedOrders.length === 0) {
+                ordersHistoryListContainer.innerHTML = `
+                    <div class="glass-card" style="text-align: center; padding: 55px 20px;">
+                        <i class="fa-solid fa-receipt" style="font-size: 3.5rem; color: var(--border); margin-bottom: 18px; display: inline-block;"></i>
+                        <h3 style="font-size: 1.45rem; margin-bottom: 10px; color: var(--text);">No Previous Orders Found</h3>
+                        <p style="color: var(--text-light); max-width: 460px; margin: 0 auto 24px; font-size: 1rem;">
+                            You haven't placed any orders yet. Treat yourself to our 30 chef-curated signature creations today!
+                        </p>
+                        <a href="menu.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 28px;">
+                            <i class="fa-solid fa-utensils"></i> Browse Full Menu
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render rich order cards
+            ordersHistoryListContainer.innerHTML = loadedOrders.map(order => {
+                const orderDate = new Date(order.createdAt).toLocaleDateString('en-IN', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const shortId = order._id ? order._id.substring(order._id.length - 8).toUpperCase() : 'UNKNOWN';
+
+                const itemsHtml = (order.items || []).map(item => `
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <img src="${item.image || 'images/dishes/hyderabadi_biryani.jpg'}" alt="${item.name}" 
+                                 style="width: 50px; height: 50px; min-width: 50px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border);">
+                            <div>
+                                <h4 style="font-size: 1.02rem; margin-bottom: 2px; color: var(--text);">${item.name}</h4>
+                                <span style="font-size: 0.85rem; color: var(--text-light);">₹${item.price} × ${item.quantity}</span>
+                            </div>
+                        </div>
+                        <strong style="font-size: 1.05rem; color: var(--primary);">₹${item.price * item.quantity}</strong>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="glass-card" style="padding: 26px; border-radius: 24px; position: relative;">
+                        <!-- HEADER -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 14px;">
+                            <div>
+                                <span style="display: inline-block; font-family: monospace; font-size: 1rem; font-weight: 700; color: var(--primary); letter-spacing: 0.05em;">#RKR-${shortId}</span>
+                                <div style="font-size: 0.85rem; color: var(--text-light); margin-top: 4px;">
+                                    <i class="fa-regular fa-calendar-days"></i> ${orderDate}
+                                </div>
+                            </div>
+                            <span style="background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); padding: 5px 14px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-check"></i> ${order.status || 'Confirmed'}
+                            </span>
+                        </div>
+
+                        <!-- ITEMS LIST -->
+                        <div style="margin-bottom: 18px;">
+                            ${itemsHtml}
+                        </div>
+
+                        <!-- FOOTER / TOTAL -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; padding-top: 14px; border-top: 1px solid var(--border);">
+                            <div style="font-size: 0.9rem; color: var(--text-light); max-width: 450px;">
+                                <i class="fa-solid fa-location-dot" style="color: var(--primary); margin-right: 6px;"></i>
+                                Delivered to: <strong style="color: var(--text);">${order.deliveryInfo?.name || 'Customer'}</strong> — ${order.deliveryInfo?.address || 'Saved address'}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 18px;">
+                                <div>
+                                    <span style="font-size: 0.82rem; color: var(--text-light); display: block;">Total Paid</span>
+                                    <strong style="font-size: 1.35rem; color: var(--primary);">₹${order.totalAmount}</strong>
+                                </div>
+                                <button class="btn-primary" onclick="window.reorderDishes('${order._id}')" style="padding: 10px 20px; font-size: 0.92rem; cursor: pointer;">
+                                    <i class="fa-solid fa-rotate-right"></i> Re-Order Dishes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+        } catch (err) {
+            console.error('Error fetching past orders:', err);
+            if (!silent) {
+                ordersHistoryListContainer.innerHTML = `
+                    <div class="glass-card" style="text-align: center; padding: 40px 20px; color: #ef4444;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; margin-bottom: 12px; display: inline-block;"></i>
+                        <p style="font-size: 1.05rem; font-weight: 600;">Unable to connect to orders server</p>
+                        <p style="color: var(--text-light); font-size: 0.92rem;">${err.message}</p>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    /* ==========================================
+       GLOBAL RE-ORDER HANDLER
+       ========================================== */
+    window.reorderDishes = function(orderId) {
+        const order = loadedOrders.find(o => o._id === orderId);
+        if (!order || !order.items || order.items.length === 0) {
+            alert('Order details could not be found to re-order.');
+            return;
+        }
+
+        // Add each item to the cart
+        order.items.forEach(item => {
+            const existing = cart.find(i => i.name === item.name);
+            if (existing) {
+                existing.quantity += item.quantity || 1;
+            } else {
+                cart.push({
+                    id: item.name,
+                    name: item.name,
+                    price: Number(item.price),
+                    image: item.image || '',
+                    quantity: Number(item.quantity || 1),
+                    description: item.description || ''
+                });
+            }
+        });
+
+        saveCart();
+        renderCheckout();
+        switchTab('checkout');
+
+        alert(`Added ${order.items.length} dishes from your past order to cart! 🛒`);
+    };
 
 });

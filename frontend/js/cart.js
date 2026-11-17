@@ -34,38 +34,7 @@ function getCart() {
 
 let cart = getCart();
 
-/* ============================================================
-   DEMO ITEMS (ONLY FIRST TIME)
-   ============================================================ */
-
-if (cart.length === 0) {
-
-    cart = [
-        {
-            id: "Cheese Burger",
-            name: "Cheese Burger",
-            price: 199,
-            quantity: 1,
-            qty: 1,
-            image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1000",
-            img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1000",
-            description: "Delicious cheesy burger"
-        },
-        {
-            id: "Italian Pizza",
-            name: "Italian Pizza",
-            price: 349,
-            quantity: 2,
-            qty: 2,
-            image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1000",
-            img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1000",
-            description: "Hot & crispy pizza"
-        }
-    ];
-
-    saveCart();
-
-}
+// Cart initializes cleanly from localStorage without dummy items
 
 /* ============================================================
    ELEMENTS
