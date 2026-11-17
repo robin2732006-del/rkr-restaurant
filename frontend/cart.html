@@ -100,7 +100,7 @@
          CART SECTION
     ========================== -->
 
-    <section class="cart-section" style="padding-top: 120px;">
+    <section class="cart-section">
 
         <div class="cart-container">
 
@@ -111,147 +111,138 @@
             <div class="cart-header">
 
                 <div class="cart-header-content">
-
+                    <span class="cart-pill-tag"><i class="fa-solid fa-bag-shopping"></i> Selected Dishes</span>
                     <h1>
                         Your Cart
-                        <span>🛒</span>
+                        <span class="cart-emoji">🛒</span>
                     </h1>
-
                     <p>
-                        Review your selected delicious dishes
+                        Review your selected authentic dishes, customize portions, and proceed to checkout.
                     </p>
-
                 </div>
 
-                <button
-                    class="clear-cart-btn"
-                    onclick="clearCart()"
-                >
-                    <i class="fa-solid fa-trash"></i>
-                    Clear Cart
-                </button>
+                <div class="cart-header-actions">
+                    <a href="menu.html" class="add-more-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Dishes
+                    </a>
+                    <button
+                        id="clearCartBtn"
+                        class="clear-cart-btn"
+                        onclick="clearCart()"
+                    >
+                        <i class="fa-solid fa-trash-can"></i>
+                        Clear Cart
+                    </button>
+                </div>
 
             </div>
 
             <!-- =========================
-                 CART ITEMS
+                 CART GRID
             ========================== -->
 
-            <div
-                id="cart-items"
-                class="cart-items"
-            ></div>
+            <div class="cart-grid" id="cartGrid">
 
-            <!-- =========================
-                 EMPTY CART
-            ========================== -->
+                <!-- LEFT COLUMN: ITEMS & EMPTY STATE -->
+                <div class="cart-items-col">
+                    <div
+                        id="cart-items"
+                        class="cart-items"
+                    ></div>
 
-            <div
-                id="empty-cart"
-                class="empty-cart"
-            >
-
-                <div class="empty-icon">
-                    <i class="fa-solid fa-cart-shopping"></i>
+                    <!-- EMPTY CART -->
+                    <div
+                        id="empty-cart"
+                        class="empty-cart"
+                    >
+                        <div class="empty-icon">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <h2>Your Cart Is Empty</h2>
+                        <p>
+                            You have not selected any dishes yet. Explore our authentic royal menu and add your favourites!
+                        </p>
+                        <div class="empty-actions">
+                            <a
+                                href="menu.html"
+                                class="shop-btn"
+                            >
+                                <i class="fa-solid fa-utensils"></i>
+                                Browse Menu
+                            </a>
+                            <a
+                                href="offers.html"
+                                class="offers-btn"
+                            >
+                                <i class="fa-solid fa-tag"></i>
+                                Today's Deals
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-                <h2>Your Cart Is Empty</h2>
+                <!-- RIGHT COLUMN: CART SUMMARY -->
+                <aside class="cart-summary-col" id="cartSummaryCol">
+                    <div class="cart-summary">
 
-                <p>
-                    Looks like you haven't added anything yet.
-                </p>
+                        <div class="summary-top">
+                            <h3>Order Summary</h3>
+                            <span class="summary-badge" id="summaryBadge">0 Dishes</span>
+                        </div>
 
-                <a
-                    href="index.html"
-                    class="shop-btn"
-                >
-                    <i class="fa-solid fa-utensils"></i>
-                    Browse Menu
-                </a>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">₹0</span>
+                        </div>
 
-            </div>
+                        <div class="summary-row">
+                            <span>Delivery Fee</span>
+                            <span id="deliveryTag">₹50</span>
+                        </div>
 
-            <!-- =========================
-                 CART SUMMARY
-            ========================== -->
+                        <div class="summary-row">
+                            <span>GST (5%)</span>
+                            <span id="gst">₹0</span>
+                        </div>
 
-            <div class="cart-summary">
+                        <div class="delivery-perk-box">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            <span>Free Express Delivery on orders above ₹800!</span>
+                        </div>
 
-                <h3>
-                    Order Summary
-                </h3>
+                        <div class="summary-divider"></div>
 
-                <div class="summary-row">
+                        <div class="summary-row total-row">
+                            <span>Total</span>
+                            <span id="total">₹0</span>
+                        </div>
 
-                    <span>
-                        Subtotal
-                    </span>
+                        <!-- CHECKOUT BUTTON -->
+                        <button
+                            class="checkout-btn"
+                            onclick="checkout()"
+                        >
+                            <span>Proceed To Checkout</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
 
-                    <span id="subtotal">
-                        ₹0
-                    </span>
+                        <!-- CONTINUE SHOPPING -->
+                        <a
+                            href="menu.html"
+                            class="continue-btn"
+                        >
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Continue Shopping
+                        </a>
 
-                </div>
+                        <div class="cart-trust-badges">
+                            <span><i class="fa-solid fa-shield-check"></i> 100% Safe Checkout</span>
+                            <span><i class="fa-solid fa-fire-burner"></i> Freshly Prepared</span>
+                        </div>
 
-                <div class="summary-row">
-
-                    <span>
-                        Delivery Fee
-                    </span>
-
-                    <span>
-                        ₹50
-                    </span>
-
-                </div>
-
-                <div class="summary-row">
-
-                    <span>
-                        GST (5%)
-                    </span>
-
-                    <span id="gst">
-                        ₹0
-                    </span>
-
-                </div>
-
-                <div class="summary-divider"></div>
-
-                <div class="summary-row total-row">
-
-                    <span>
-                        Total
-                    </span>
-
-                    <span id="total">
-                        ₹0
-                    </span>
-
-                </div>
-
-                <!-- CHECKOUT BUTTON -->
-
-                <button
-                    class="checkout-btn"
-                    onclick="checkout()"
-                >
-
-                    <i class="fa-solid fa-credit-card"></i>
-
-                    Proceed To Checkout
-
-                </button>
-
-                <!-- CONTINUE SHOPPING -->
-
-                <a
-                    href="index.html"
-                    class="continue-btn"
-                >
-                    Continue Shopping
-                </a>
+                    </div>
+                </aside>
 
             </div>
 

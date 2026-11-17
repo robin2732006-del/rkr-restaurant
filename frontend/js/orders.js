@@ -123,16 +123,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================
-       GET CART
+       GET CART (SANITIZED & DUMMY PURGED)
        ========================================== */
     function getCart() {
         try {
             const stored = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            return stored.map(item => ({
+            const LEGACY_DUMMIES = ['cheese burger', 'italian pizza', 'burger', 'pizza', 'demo item'];
+            const cleaned = stored.filter(item => {
+                if (!item || !item.name) return false;
+                const name = String(item.name).toLowerCase().trim();
+                return !LEGACY_DUMMIES.includes(name);
+            });
+            if (cleaned.length !== stored.length) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+            }
+            return cleaned.map(item => ({
                 id: item.id || item.name,
                 name: item.name,
                 price: Number(item.price),
-                image: item.image || item.img || '',
+                image: item.image || item.img || 'images/dishes/hyderabadi_biryani.jpg',
                 quantity: Number(item.quantity || item.qty || 1),
                 description: item.description || ''
             }));

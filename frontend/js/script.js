@@ -180,28 +180,38 @@ function initPreloader() {
    ============================================================ */
 
 function initHeader() {
-
   const header = qs('#header');
   if (!header) return;
 
+  let isScrolled = false;
   const updateHeader = () => {
-
-    if (window.scrollY > 60) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+    const shouldScrolled = window.scrollY > 40;
+    if (shouldScrolled !== isScrolled) {
+      isScrolled = shouldScrolled;
+      if (isScrolled) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
     }
-
   };
 
   updateHeader();
 
+  let ticking = false;
   window.addEventListener(
     'scroll',
-    throttle(updateHeader, 20),
+    () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateHeader();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    },
     { passive: true }
   );
-
 }
 
 /* ============================================================
@@ -369,17 +379,25 @@ function initCartSystem() {
   const totalWrap = qs('#cartTotal');
 
   const getCart = () => {
-
     try {
       const stored = JSON.parse(
         localStorage.getItem(STORAGE_KEY)
       ) || [];
-      return stored.map(item => ({
+      const LEGACY_DUMMIES = ['cheese burger', 'italian pizza', 'burger', 'pizza', 'demo item'];
+      const cleaned = stored.filter(item => {
+        if (!item || !item.name) return false;
+        const name = String(item.name).toLowerCase().trim();
+        return !LEGACY_DUMMIES.includes(name);
+      });
+      if (cleaned.length !== stored.length) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+      }
+      return cleaned.map(item => ({
         id: item.id || item.name,
         name: item.name,
         price: Number(item.price),
-        image: item.image || item.img || '',
-        img: item.img || item.image || '',
+        image: item.image || item.img || 'images/dishes/hyderabadi_biryani.jpg',
+        img: item.img || item.image || 'images/dishes/hyderabadi_biryani.jpg',
         quantity: Number(item.quantity || item.qty || 1),
         qty: Number(item.qty || item.quantity || 1),
         description: item.description || ''
@@ -387,7 +405,6 @@ function initCartSystem() {
     } catch {
       return [];
     }
-
   };
 
   const saveCart = cart => {
@@ -398,14 +415,13 @@ function initCartSystem() {
   };
 
   const updateBadge = () => {
-
     const total = getCart().reduce(
       (sum, item) => sum + item.qty,
       0
     );
-
-    if (badge) badge.textContent = total;
-
+    qsa('#cartBadge, #cart-count, .cart-badge').forEach(b => {
+      b.textContent = total;
+    });
   };
 
   const renderCart = () => {
@@ -889,9 +905,18 @@ function initNavSpy() {
     }
   };
 
+  let ticking = false;
   window.addEventListener(
     'scroll',
-    throttle(activate, 80),
+    () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          activate();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    },
     { passive: true }
   );
 }
@@ -969,21 +994,33 @@ function initTopButton() {
   const btn = qs('#topBtn');
   if (!btn) return;
 
+  let isShown = false;
   const update = () => {
-
-    if (window.scrollY > 400) {
-      btn.classList.add('show');
-    } else {
-      btn.classList.remove('show');
+    const shouldShow = window.scrollY > 350;
+    if (shouldShow !== isShown) {
+      isShown = shouldShow;
+      if (isShown) {
+        btn.classList.add('show');
+      } else {
+        btn.classList.remove('show');
+      }
     }
-
   };
 
   update();
 
+  let ticking = false;
   window.addEventListener(
     'scroll',
-    throttle(update, 80),
+    () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          update();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    },
     { passive: true }
   );
 
