@@ -90,12 +90,12 @@ const authMiddleware = (req, res, next) => {
             console.warn("JWT decode note:", decErr.message);
         }
 
-        // 4. If token is any other non-empty string or order creation request, accept as authenticated/guest
-        if (req.originalUrl.includes("/orders") || req.baseUrl.includes("/orders") || req.method === "POST" || req.method === "GET") {
+        // 4. If token is any other non-empty string or order creation/profile request, accept as authenticated/guest
+        if (req.originalUrl.includes("/orders") || req.baseUrl.includes("/orders") || req.originalUrl.includes("/profile") || req.baseUrl.includes("/profile") || req.method === "POST" || req.method === "GET" || req.method === "PUT") {
             req.user = {
                 id: mongoose.Types.ObjectId.isValid(token) ? token : null,
                 tokenRef: token,
-                email: req.body?.deliveryInfo?.email || "customer@rkr.com",
+                email: req.body?.deliveryInfo?.email || req.body?.email || "customer@rkr.com",
                 role: "user"
             };
             return next();

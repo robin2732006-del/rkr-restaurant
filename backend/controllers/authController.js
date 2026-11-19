@@ -110,10 +110,22 @@ exports.login = async (req, res) => {
                     email: user.email
                 });
             } else {
-                // Verify password
-                const isMatch = await bcrypt.compare(password, user.password);
+                // Verify password (supports bcrypt hash and legacy plain-text password with auto-upgrade)
+                let isMatch = (user.password === password);
+                if (!isMatch) {
+                    try {
+                        isMatch = await bcrypt.compare(password, user.password);
+                    } catch (err) {
+                        isMatch = false;
+                    }
+                }
                 if (!isMatch) {
                     return res.status(401).json({ success: false, message: "Invalid credentials" });
+                }
+                // Automatically upgrade legacy plain-text password to bcrypt hash in MongoDB
+                if (!user.password || (!user.password.startsWith("$2a$") && !user.password.startsWith("$2b$"))) {
+                    const salt = await bcrypt.genSalt(10);
+                    user.password = await bcrypt.hash(password, salt);
                 }
                 await user.save();
             }
@@ -290,8 +302,8 @@ exports.changePassword = async (req, res) => {
             });
         }
 
-        user.password = newPassword;
-        user.plainPassword = newPassword;
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
         await user.save();
 
         res.status(200).json({
@@ -353,12 +365,13 @@ exports.resetPassword = async (req, res) => {
             } else {
                 const genName = normalizedEmail ? normalizedEmail.split('@')[0] : 'Valued Diner';
                 const cleanName = genName.charAt(0).toUpperCase() + genName.slice(1);
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(newPassword, salt);
                 user = await User.create({
                     name: cleanName,
                     email: normalizedEmail || `user_${Date.now()}@rkr-dining.com`,
                     phone: cleanMobile,
-                    password: newPassword,
-                    plainPassword: newPassword
+                    password: hashedPassword
                 });
                 console.log("✅ New user created with reset password in MongoDB:", user.email);
             }
