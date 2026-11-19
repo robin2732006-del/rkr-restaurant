@@ -2672,9 +2672,153 @@ body.light .mobile-email {
     padding: 24px 16px;
   }
 
+  /* ── 2 IN SINGLE LINE (2-COLUMN GRID) FOR ALL MOBILE BROWSERS ── */
   .menu-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .food-card {
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  .food-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .food-img img {
+    height: clamp(120px, 34vw, 155px);
+  }
+
+  .food-tag {
+    top: 7px;
+    left: 7px;
+    padding: 2px 7px;
+    font-size: 0.6rem;
+    font-weight: 700;
+  }
+
+  .diet-chip-indicator {
+    top: 7px;
+    right: 34px;
+    width: 22px;
+    height: 22px;
+    font-size: 9px;
+  }
+
+  .wishlist-btn {
+    top: 7px;
+    right: 7px;
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .food-body {
+    padding: 8px 8px 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .food-meta {
+    margin-bottom: 3px;
+  }
+
+  .food-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+
+  .food-rating {
+    font-size: 0.7rem;
+    gap: 2px;
+  }
+
+  .food-rating i {
+    font-size: 8px;
+  }
+
+  .food-body h3 {
+    font-size: clamp(0.82rem, 2.6vw, 0.95rem);
+    line-height: 1.25;
+    margin-bottom: 3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .food-body p {
+    font-size: 0.7rem;
+    line-height: 1.35;
+    margin-bottom: 6px;
+    color: var(--text-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .food-ingredients-preview {
+    margin: 2px 0 6px 0;
+    padding: 4px 6px;
+    border-radius: 6px;
+  }
+
+  .ing-header {
+    font-size: 0.58rem;
+    gap: 3px;
+    margin-bottom: 3px;
+    letter-spacing: 0.04em;
+  }
+
+  .ing-header i {
+    font-size: 8px;
+  }
+
+  .ing-chips-list {
+    gap: 3px;
+  }
+
+  .ing-pill {
+    font-size: 0.6rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    line-height: 1.2;
+  }
+
+  .ing-pill-more {
+    font-size: 0.6rem;
+    padding: 0 2px;
+  }
+
+  .food-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-top: auto;
+    padding-top: 4px;
+  }
+
+  .food-price {
+    font-size: clamp(0.92rem, 3vw, 1.08rem);
+    font-weight: 800;
+  }
+
+  .add-btn {
+    padding: 5px 9px;
+    font-size: 0.72rem;
+    border-radius: 7px;
+    gap: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .add-btn i {
+    font-size: 9px;
   }
 
   .about-grid {
@@ -2752,6 +2896,42 @@ body.light .mobile-email {
   }
 }
 
+/* ── 2a. ULTRA-SMALL MOBILE (<= 360px) ─────────────────────── */
+@media (max-width: 360px) {
+  .menu-grid {
+    gap: 6px;
+  }
+
+  .food-img img {
+    height: 110px;
+  }
+
+  .food-body {
+    padding: 6px 6px 8px;
+  }
+
+  .food-body h3 {
+    font-size: 0.8rem;
+  }
+
+  .food-body p {
+    display: none;
+  }
+
+  .food-ingredients-preview {
+    display: none;
+  }
+
+  .food-price {
+    font-size: 0.88rem;
+  }
+
+  .add-btn {
+    padding: 4px 6px;
+    font-size: 0.68rem;
+  }
+}
+
 /* ── 2. TABLET VIEW (768px – 1024px) ───────────────────────── */
 @media (min-width: 768px) and (max-width: 1024px) {
   .container {
@@ -2797,7 +2977,7 @@ body.light .mobile-email {
   }
 
   .menu-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 20px;
   }
 
@@ -2892,7 +3072,12 @@ body.light .mobile-email {
 @media (min-width: 1367px) and (max-width: 1920px) {
   .container {
     width: 88%;
-    max-width: 1280px;
+    max-width: 1400px;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
   }
 }
 
