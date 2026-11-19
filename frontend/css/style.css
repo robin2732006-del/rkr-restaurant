@@ -3713,12 +3713,72 @@ body.cursor-hover .cursor-ring {
 
 @media (max-width: 768px) {
   .home-vip-section {
-    padding: 32px 0 24px;
-    scroll-margin-top: calc(var(--header-h, 72px) + 24px);
+    padding: calc(var(--header-h, 72px) + 14px) 0 30px;
+    scroll-margin-top: calc(var(--header-h, 72px) + 20px);
   }
   .home-vip-card {
-    padding: 24px 16px;
+    padding: 22px 16px;
     border-radius: 20px;
+  }
+  .home-vip-top {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    gap: 10px;
+  }
+  .home-vip-badge-chip {
+    padding: 5px 12px;
+    font-size: 0.74rem;
+  }
+  .home-vip-quick-link {
+    font-size: 0.82rem;
+  }
+  .home-vip-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .home-vip-user-panel {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+  }
+  .home-vip-avatar-wrap {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto;
+  }
+  .home-vip-avatar {
+    font-size: 1.8rem;
+  }
+  .home-vip-meta h2 {
+    font-size: 1.35rem;
+  }
+  .home-vip-meta p {
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+  }
+  .home-vip-stats-pills {
+    justify-content: center;
+    gap: 8px;
+  }
+  .home-vip-stat-pill {
+    font-size: 0.74rem;
+    padding: 4px 10px;
+  }
+  .home-recent-order-panel {
+    padding: 16px 14px;
+    border-radius: 16px;
+  }
+  .home-order-desc {
+    min-width: 0;
+  }
+  .home-order-footer {
+    gap: 10px;
+  }
+  .home-reorder-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 11px;
+    font-size: 0.86rem;
   }
 }
 

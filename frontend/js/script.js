@@ -961,6 +961,9 @@ function initSmoothScroll() {
               behavior: 'smooth'
             });
             history.pushState(null, null, targetUrl.hash);
+            if (targetUrl.hash === '#search') {
+              setTimeout(() => qs('#searchInput')?.focus(), 400);
+            }
           });
         }
       }
@@ -994,6 +997,9 @@ function initSmoothScroll() {
           top: getTargetScrollPos(target),
           behavior: 'smooth'
         });
+        if (hash === '#search') {
+          setTimeout(() => qs('#searchInput')?.focus(), 400);
+        }
       }
     };
 
