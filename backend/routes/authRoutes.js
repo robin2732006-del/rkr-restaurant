@@ -7,7 +7,8 @@ const {
     login,
     getProfile,
     updateProfile,
-    changePassword
+    changePassword,
+    resetPassword
 } = require("../controllers/authController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -23,6 +24,13 @@ router.post("/signup", signup);
 ========================================================= */
 
 router.post("/login", login);
+
+/* =========================================================
+   FORGOT / RESET PASSWORD
+========================================================= */
+
+router.post("/reset-password", resetPassword);
+router.post("/forgot-password", resetPassword);
 
 /* =========================================================
    PROFILE
