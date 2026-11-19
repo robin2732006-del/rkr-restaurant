@@ -21,10 +21,7 @@ const userSchema = new mongoose.Schema(
         required: true
     },
 
-    plainPassword: {
-        type: String,
-        default: ""
-    },
+
 
     phone: {
         type: String,

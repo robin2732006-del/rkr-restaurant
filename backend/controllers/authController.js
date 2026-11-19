@@ -29,16 +29,16 @@ exports.signup = async (req, res) => {
             });
 
             if (user) {
+                // Update name only; keep existing hashed password
                 user.name = name || user.name;
-                user.password = password;
-                user.plainPassword = password;
                 await user.save();
             } else {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
                 user = await User.create({
                     name,
                     email: normalizedEmail,
-                    password: password,
-                    plainPassword: password
+                    password: hashedPassword
                 });
             }
         } else {
@@ -94,27 +94,28 @@ exports.login = async (req, res) => {
             });
 
             if (!user) {
-                // Auto-create user on login so credentials entered by the user are always saved in the database!
+                // Auto-create user on login
                 const generatedName = normalizedEmail.split('@')[0];
                 const cleanName = generatedName.charAt(0).toUpperCase() + generatedName.slice(1);
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
                 user = await User.create({
                     name: cleanName,
                     email: normalizedEmail,
-                    password: password,
-                    plainPassword: password
+                    password: hashedPassword
                 });
-                console.log("User auto-registered and saved in database on login:", {
+                console.log("User auto-registered on login:", {
                     id: user._id,
                     name: user.name,
-                    email: user.email,
-                    password: user.password
+                    email: user.email
                 });
             } else {
-                // Store / update visible name, gmail and password in database upon login
-                user.password = password;
-                user.plainPassword = password;
+                // Verify password
+                const isMatch = await bcrypt.compare(password, user.password);
+                if (!isMatch) {
+                    return res.status(401).json({ success: false, message: "Invalid credentials" });
+                }
                 await user.save();
-                console.log("Password updated visible in database on login for:", user.email);
             }
         } else {
             console.warn("⚠️ MongoDB offline/connecting during login. Generating resilient session.");
@@ -343,9 +344,10 @@ exports.resetPassword = async (req, res) => {
             user = await User.findOne({ $or: query });
 
             if (user) {
-                user.password = newPassword;
-                user.plainPassword = newPassword;
-                if (cleanMobile && !user.phone) user.phone = cleanMobile;
+                // Hash the new password before saving
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(newPassword, salt);
+                user.password = hashedPassword;
                 await user.save();
                 console.log("✅ Password successfully updated in MongoDB for user:", user.email);
             } else {
