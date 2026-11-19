@@ -37,11 +37,26 @@
   <script>
     (function() {
       try {
-        if ((localStorage.getItem('rkr-theme') || 'dark') === 'light') {
+        const theme = localStorage.getItem('rkr-theme') || 'dark';
+        if (theme === 'light') {
           document.documentElement.classList.add('light');
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       } catch (e) {}
     })();
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        const theme = localStorage.getItem('rkr-theme') || 'dark';
+        if (theme === 'light') {
+          document.documentElement.classList.add('light');
+          document.documentElement.setAttribute('data-theme', 'light');
+          if (document.body) {
+            document.body.classList.add('light');
+            document.body.setAttribute('data-theme', 'light');
+          }
+        }
+      } catch (e) {}
+    });
   </script>
 </head>
 

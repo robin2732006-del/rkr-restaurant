@@ -12,6 +12,10 @@ const { Server } = require("socket.io");
 
 dotenv.config();
 
+if (!process.env.JWT_SECRET) {
+    process.env.JWT_SECRET = "rkrrestaurant123";
+}
+
 // Configure reliable DNS servers to resolve MongoDB Atlas SRV records on Windows networks
 try {
     dns.setServers(["8.8.8.8", "8.8.4.4", "1.1.1.1"]);

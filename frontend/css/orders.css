@@ -1164,7 +1164,11 @@ textarea{
 /* =========================================================
    LIGHT MODE OVERRIDES FOR ORDERS
 ========================================================= */
-body.light {
+html.light,
+body.light,
+[data-theme="light"],
+html.light body,
+[data-theme="light"] body {
   --bg: #f8f5f0;
   --bg-light: #eeebe4;
   --card: #ffffff;
@@ -1172,7 +1176,8 @@ body.light {
   --text-light: #4a3f35;
   --border: rgba(0, 0, 0, 0.08);
   --shadow: 0 10px 40px rgba(0,0,0,0.06);
-  background: radial-gradient(circle at top left, #eeebe4 0%, #f8f5f0 60%);
+  background: radial-gradient(circle at top left, #eeebe4 0%, #f8f5f0 60%) !important;
+  color: #18130c !important;
 }
 
 body.light .order-hero {
