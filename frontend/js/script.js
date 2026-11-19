@@ -22,8 +22,13 @@ const getApiUrl = (path) => {
                   hostname.startsWith('192.168.') || 
                   hostname.startsWith('10.') || 
                   hostname.startsWith('172.');
-  const base = isLocal ? 'http://localhost:5000' : 'https://rkr-restaurant-backend.onrender.com';
-  return base + path;
+  if (isLocal) {
+    return 'http://localhost:5000' + path;
+  }
+  if (hostname.includes('vercel.app')) {
+    return path;
+  }
+  return 'https://rkr-restaurant-backend.onrender.com' + path;
 };
 
 const debounce = (fn, delay = 100) => {

@@ -5,9 +5,13 @@ if (typeof getApiUrl !== 'function') {
         const isLocal = !hostname || 
                         window.location.protocol === 'file:' || 
                         hostname === 'localhost' || 
-                        hostname === '127.0.0.1';
-        const base = isLocal ? 'http://localhost:5000' : 'https://rkr-restaurant-backend.onrender.com';
-        return base + path;
+                        hostname === '127.0.0.1' || 
+                        hostname.startsWith('192.168.') || 
+                        hostname.startsWith('10.') || 
+                        hostname.startsWith('172.');
+        if (isLocal) return 'http://localhost:5000' + path;
+        if (hostname.includes('vercel.app')) return path;
+        return 'https://rkr-restaurant-backend.onrender.com' + path;
     };
 }
 
