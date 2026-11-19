@@ -2684,18 +2684,36 @@ function initProfileDashboard() {
     };
   }
 
-  // 5. Order Vault & History (MongoDB persistent)
+  // 5. Order Vault & History (MongoDB persistent, strictly isolated to current user)
   async function loadOrderHistory() {
     const ordersHistoryList = qs('#ordersHistoryList');
     if (!ordersHistoryList) return;
 
-    try {
-      const email = userData?.user?.email || '';
-      const userId = userData?.user?._id || userData?.user?.id || '';
-      const userToken = (userData?.token && userData.token !== 'undefined' && userData.token !== 'null')
-        ? userData.token
-        : 'vip-demo-token-rkr';
+    const email = (userData?.user?.email || '').trim().toLowerCase();
+    const userId = userData?.user?._id || userData?.user?.id || '';
+    const userToken = (userData?.token && userData.token !== 'undefined' && userData.token !== 'null')
+      ? userData.token
+      : 'vip-demo-token-rkr';
 
+    // 1. Load local orders placed by THIS user/email only
+    let cachedOrders = [];
+    try {
+      const allLocal = JSON.parse(localStorage.getItem('orders') || '[]');
+      cachedOrders = allLocal.filter(o => {
+        const orderEmail = (o?.deliveryInfo?.email || o?.user?.email || '').trim().toLowerCase();
+        const orderUserId = o?.user?._id || o?.user?.id || o?.user;
+        return (email && orderEmail === email) || (userId && orderUserId && orderUserId === userId);
+      });
+    } catch (e) {}
+
+    allOrders = cachedOrders;
+    if (allOrders.length > 0) {
+      renderOrdersList(allOrders);
+      updateOrderCounts(allOrders.length);
+    }
+
+    // 2. Fetch authenticated user's orders from database
+    try {
       let queryParams = [];
       if (email) queryParams.push(`email=${encodeURIComponent(email)}`);
       if (userId && userId !== 'usr-vip-001') queryParams.push(`userId=${encodeURIComponent(userId)}`);
@@ -2707,7 +2725,6 @@ function initProfileDashboard() {
         }
       });
 
-      // If token expired or rejected, retry with demo VIP token fallback
       if (!response.ok && (response.status === 401 || response.status === 403)) {
         response = await fetch(getApiUrl(`/api/orders${qsStr}`), {
           headers: {
@@ -2717,15 +2734,24 @@ function initProfileDashboard() {
       }
 
       const data = await response.json();
-      allOrders = (data && data.orders) ? data.orders : [];
+      if (data && Array.isArray(data.orders)) {
+        // Merge and deduplicate orders by _id / id
+        const orderMap = new Map();
+        // Server orders take precedence
+        data.orders.forEach(o => {
+          const key = o._id || o.id;
+          if (key) orderMap.set(String(key), o);
+        });
+        // Add any pending local orders for this user
+        cachedOrders.forEach(o => {
+          const key = o._id || o.id;
+          if (key && !orderMap.has(String(key))) orderMap.set(String(key), o);
+        });
 
-      // Update counters
-      const totalCount = allOrders.length;
-      if (statTotalOrders) statTotalOrders.textContent = `${totalCount} ${totalCount === 1 ? 'Order' : 'Orders'}`;
-      if (orderCountBadge) orderCountBadge.textContent = `${totalCount}`;
-      const allOrdersCount = qs('#allOrdersCount');
-      if (allOrdersCount) allOrdersCount.textContent = `${totalCount}`;
+        allOrders = Array.from(orderMap.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }
 
+      updateOrderCounts(allOrders.length);
       renderOrdersList(allOrders);
 
       // Order filter pills
@@ -2745,27 +2771,18 @@ function initProfileDashboard() {
       });
 
     } catch (err) {
-      console.error('Order history error:', err);
-      // Direct network fallback
-      try {
-        const fbRes = await fetch(getApiUrl('/api/orders'), {
-          headers: { 'Authorization': 'Bearer vip-demo-token-rkr' }
-        });
-        const fbData = await fbRes.json();
-        if (fbData && fbData.orders && fbData.orders.length) {
-          allOrders = fbData.orders;
-          renderOrdersList(allOrders);
-          return;
-        }
-      } catch (e2) {}
-
-      ordersHistoryList.innerHTML = `
-        <div style="text-align: center; padding: 40px; color: var(--red);">
-          <i class="fa-solid fa-triangle-exclamation" style="font-size: 42px; margin-bottom: 12px; display:inline-block;"></i>
-          <p>Failed to synchronize orders from database. Please check connection and try again.</p>
-        </div>
-      `;
+      console.warn('Order history background sync note:', err);
+      // Strictly render only this user's cached orders (NEVER show other users' orders)
+      renderOrdersList(allOrders);
+      updateOrderCounts(allOrders.length);
     }
+  }
+
+  function updateOrderCounts(totalCount) {
+    if (statTotalOrders) statTotalOrders.textContent = `${totalCount} ${totalCount === 1 ? 'Order' : 'Orders'}`;
+    if (orderCountBadge) orderCountBadge.textContent = `${totalCount}`;
+    const allOrdersCount = qs('#allOrdersCount');
+    if (allOrdersCount) allOrdersCount.textContent = `${totalCount}`;
   }
 
   function renderOrdersList(ordersToRender) {

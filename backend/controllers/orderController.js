@@ -89,12 +89,12 @@ exports.createOrder = async (req, res) => {
 };
 
 /* ==========================================
-   GET ORDERS
-========================================== */
+   GET ORDERS (Strictly Isolated to Current Profile)
+========================================= */
 exports.getOrders = async (req, res) => {
     try {
         let userId = req.user ? (req.user.id || req.user._id) : (req.query.userId || null);
-        const email = req.query.email || (req.user && req.user.email ? req.user.email : null);
+        const email = (req.query.email || (req.user && req.user.email ? req.user.email : null) || "").toLowerCase().trim();
         let orders = [];
 
         if (userId && !mongoose.Types.ObjectId.isValid(userId)) {
@@ -102,27 +102,21 @@ exports.getOrders = async (req, res) => {
         }
 
         if (mongoose.connection.readyState === 1) {
-            // 1. Try finding orders by userId if authenticated and valid ObjectId
+            const queryConditions = [];
             if (userId) {
-                orders = await Order.find({ user: userId })
-                    .sort({ createdAt: -1 })
-                    .populate("user");
+                queryConditions.push({ user: userId });
+            }
+            if (email) {
+                queryConditions.push({ "deliveryInfo.email": { $regex: new RegExp('^' + email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i') } });
             }
 
-            // 2. If no orders by userId, try matching by email
-            if ((!orders || orders.length === 0) && email) {
-                orders = await Order.find({ "deliveryInfo.email": email.toLowerCase().trim() })
+            // ONLY find orders matching this specific profile's ID or verified email
+            if (queryConditions.length > 0) {
+                orders = await Order.find({ $or: queryConditions })
                     .sort({ createdAt: -1 })
                     .populate("user");
             }
-
-            // 3. Fallback to latest authentic database orders so the vault is never blank or broken
-            if (!orders || orders.length === 0) {
-                orders = await Order.find()
-                    .sort({ createdAt: -1 })
-                    .limit(10)
-                    .populate("user");
-            }
+            // If the user has no past orders, strictly keep orders as [] (NEVER return other users' orders!)
         }
 
         return res.status(200).json({

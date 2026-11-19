@@ -5180,6 +5180,7 @@ body.light .home-concierge-pill:hover {
 .db-tab-content {
   display: none;
   animation: tabFade 0.35s ease forwards;
+  scroll-margin-top: 120px;
 }
 
 .db-tab-content.active {
