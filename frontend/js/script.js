@@ -449,48 +449,117 @@ function initCartSystem() {
 
     updateBadge();
 
+    const drawerCount = qs('#cartDrawerCount');
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    if (drawerCount) {
+      drawerCount.textContent = totalItems === 1 ? '1 item' : `${totalItems} items`;
+    }
+
+    // Free delivery progress banner (Threshold: ₹500)
+    const deliveryThreshold = 500;
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const progressWrap = qs('#cartDeliveryProgress');
+    if (progressWrap) {
+      if (cart.length > 0) {
+        progressWrap.style.display = 'block';
+        if (subtotal >= deliveryThreshold) {
+          progressWrap.innerHTML = `
+            <div class="cart-perk-banner unlocked">
+              <div class="perk-text">
+                <i class="fa-solid fa-circle-check"></i>
+                <span><strong>Free Express Delivery</strong> Unlocked! 🎉</span>
+              </div>
+              <div class="perk-bar"><div class="perk-fill" style="width: 100%;"></div></div>
+            </div>
+          `;
+        } else {
+          const needed = deliveryThreshold - subtotal;
+          const percent = Math.min(100, Math.round((subtotal / deliveryThreshold) * 100));
+          progressWrap.innerHTML = `
+            <div class="cart-perk-banner">
+              <div class="perk-text">
+                <i class="fa-solid fa-bolt-lightning"></i>
+                <span>Add <strong>₹${needed}</strong> more for <strong>FREE Delivery</strong></span>
+              </div>
+              <div class="perk-bar"><div class="perk-fill" style="width: ${percent}%;"></div></div>
+            </div>
+          `;
+        }
+      } else {
+        progressWrap.style.display = 'none';
+      }
+    }
+
     if (!cart.length) {
 
       itemsWrap.innerHTML = `
         <div class="cart-empty">
-          <i class="fa-solid fa-cart-shopping"></i>
-          <p>Your cart is empty</p>
+          <div class="cart-empty-icon">
+            <i class="fa-solid fa-bag-shopping"></i>
+          </div>
+          <h4>Your Bag is Empty</h4>
+          <p>Treat your palate to authentic Awadhi, Mughlai & Chettinad culinary signatures.</p>
+          <a href="menu.html" class="cart-browse-btn" onclick="const d = document.getElementById('cartDrawer'); if(d) d.classList.remove('open'); const ov = document.getElementById('cartOverlay'); if(ov) ov.classList.remove('show');">
+            <i class="fa-solid fa-utensils"></i> Browse Signature Menu
+          </a>
         </div>
       `;
 
       if (totalWrap) {
         totalWrap.textContent = '₹0';
       }
+      const grandTotalEl = qs('#cartGrandTotal');
+      if (grandTotalEl) grandTotalEl.textContent = '₹0';
+      const checkoutBtnPrice = qs('#cartCheckoutBtnPrice');
+      if (checkoutBtnPrice) checkoutBtnPrice.textContent = '₹0';
+
+      const footer = qs('#cartFooter');
+      if (footer) footer.style.display = 'none';
 
       return;
 
     }
 
-    itemsWrap.innerHTML = cart.map(item => `
-      <div class="cart-item">
-        <img src="${item.img}" alt="${item.name}">
-        <div class="cart-item-body">
-          <h4>${item.name}</h4>
-          <p>₹${item.price}</p>
+    const footer = qs('#cartFooter');
+    if (footer) footer.style.display = 'flex';
 
-          <div class="cart-qty">
-            <button class="qty-minus" data-name="${item.name}">
-              -
-            </button>
+    itemsWrap.innerHTML = cart.map(item => {
+      const lineTotal = item.price * item.qty;
+      const safeImg = item.img || item.image || 'images/dishes/hyderabadi_biryani.jpg';
+      return `
+        <div class="cart-item" data-name="${item.name}">
+          <div class="cart-item-img-wrap">
+            <img src="${safeImg}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='images/dishes/hyderabadi_biryani.jpg';">
+          </div>
 
-            <span>${item.qty}</span>
+          <div class="cart-item-body">
+            <div class="cart-item-header-row">
+              <h4 title="${item.name}">${item.name}</h4>
+              <button class="cart-remove" data-name="${item.name}" aria-label="Remove item" title="Remove dish">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
 
-            <button class="qty-plus" data-name="${item.name}">
-              +
-            </button>
+            <div class="cart-item-meta-row">
+              <span class="cart-unit-price">₹${item.price} each</span>
+              <span class="cart-line-total">₹${lineTotal.toLocaleString('en-IN')}</span>
+            </div>
+
+            <div class="cart-item-actions-row">
+              <div class="cart-qty">
+                <button class="qty-minus" data-name="${item.name}" aria-label="Decrease quantity">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+                <span class="qty-count">${item.qty}</span>
+                <button class="qty-plus" data-name="${item.name}" aria-label="Increase quantity">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-
-        <button class="cart-remove" data-name="${item.name}">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     const total = cart.reduce(
       (sum, item) => sum + item.price * item.qty,
@@ -500,6 +569,16 @@ function initCartSystem() {
     if (totalWrap) {
       totalWrap.textContent =
         `₹${total.toLocaleString('en-IN')}`;
+    }
+
+    const grandTotalEl = qs('#cartGrandTotal');
+    if (grandTotalEl) {
+      grandTotalEl.textContent = `₹${total.toLocaleString('en-IN')}`;
+    }
+
+    const checkoutBtnPrice = qs('#cartCheckoutBtnPrice');
+    if (checkoutBtnPrice) {
+      checkoutBtnPrice.textContent = `₹${total.toLocaleString('en-IN')}`;
     }
 
     bindCartActions();

@@ -274,15 +274,47 @@
 </div>
 
 <!-- ===== CART DRAWER ===== -->
-<div class="cart-drawer" id="cartDrawer">
+<div class="cart-drawer" id="cartDrawer" aria-label="Shopping Cart">
   <div class="cart-header">
-    <h3><i class="fa-solid fa-bag-shopping"></i> Your Cart</h3>
-    <button id="cartClose"><i class="fa-solid fa-xmark"></i></button>
+    <div class="cart-header-left">
+      <span class="cart-header-icon"><i class="fa-solid fa-bag-shopping"></i></span>
+      <div>
+        <h3 class="cart-header-title">Your Cart</h3>
+        <span class="cart-count-badge" id="cartDrawerCount">0 items</span>
+      </div>
+    </div>
+    <button id="cartClose" aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
   </div>
+
+  <div id="cartDeliveryProgress" class="cart-delivery-progress-wrap"></div>
+
   <div class="cart-items" id="cartItems"></div>
+
   <div class="cart-footer" id="cartFooter">
-    <div class="cart-total">Total: <span id="cartTotal">₹0</span></div>
-    <a href="cart.html" class="btn-primary" style="width:100%;justify-content:center">Proceed to Checkout</a>
+    <div class="cart-summary-breakdown">
+      <div class="cart-summary-row">
+        <span>Subtotal</span>
+        <strong id="cartTotal">₹0</strong>
+      </div>
+      <div class="cart-summary-row highlight">
+        <span>Total Amount</span>
+        <strong class="cart-grand-total" id="cartGrandTotal">₹0</strong>
+      </div>
+    </div>
+
+    <a href="orders.html" class="cart-checkout-btn">
+      <span class="btn-text">Proceed to Checkout</span>
+      <span class="btn-price-pill">
+        <span id="cartCheckoutBtnPrice">₹0</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </span>
+    </a>
+
+    <div class="cart-view-full-wrap">
+      <a href="cart.html" class="cart-view-full-link">
+        <i class="fa-solid fa-sliders"></i> View Full Bag & Apply Coupons
+      </a>
+    </div>
   </div>
 </div>
 <!-- CART OVERLAY -->
