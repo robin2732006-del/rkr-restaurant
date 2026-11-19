@@ -449,58 +449,32 @@ function initCartSystem() {
 
     updateBadge();
 
-    const drawerCount = qs('#cartDrawerCount');
+    const countHeader = qs('#cartHeaderCount');
     const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-    if (drawerCount) {
-      drawerCount.textContent = totalItems === 1 ? '1 item' : `${totalItems} items`;
+    if (countHeader) {
+      countHeader.textContent = totalItems === 1 ? '1 dish' : `${totalItems} dishes`;
+      countHeader.style.display = totalItems > 0 ? 'inline-block' : 'none';
     }
 
-    // Free delivery progress banner (Threshold: ₹500)
-    const deliveryThreshold = 500;
-    const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-    const progressWrap = qs('#cartDeliveryProgress');
-    if (progressWrap) {
-      if (cart.length > 0) {
-        progressWrap.style.display = 'block';
-        if (subtotal >= deliveryThreshold) {
-          progressWrap.innerHTML = `
-            <div class="cart-perk-banner unlocked">
-              <div class="perk-text">
-                <i class="fa-solid fa-circle-check"></i>
-                <span><strong>Free Express Delivery</strong> Unlocked! 🎉</span>
-              </div>
-              <div class="perk-bar"><div class="perk-fill" style="width: 100%;"></div></div>
-            </div>
-          `;
-        } else {
-          const needed = deliveryThreshold - subtotal;
-          const percent = Math.min(100, Math.round((subtotal / deliveryThreshold) * 100));
-          progressWrap.innerHTML = `
-            <div class="cart-perk-banner">
-              <div class="perk-text">
-                <i class="fa-solid fa-bolt-lightning"></i>
-                <span>Add <strong>₹${needed}</strong> more for <strong>FREE Delivery</strong></span>
-              </div>
-              <div class="perk-bar"><div class="perk-fill" style="width: ${percent}%;"></div></div>
-            </div>
-          `;
-        }
-      } else {
-        progressWrap.style.display = 'none';
-      }
+    // Dynamic Perk Banner placeholder
+    let perkBanner = qs('#cartPerkBanner');
+    if (!perkBanner && itemsWrap) {
+      perkBanner = document.createElement('div');
+      perkBanner.id = 'cartPerkBanner';
+      itemsWrap.parentNode.insertBefore(perkBanner, itemsWrap);
     }
 
     if (!cart.length) {
 
       itemsWrap.innerHTML = `
-        <div class="cart-empty">
-          <div class="cart-empty-icon">
+        <div class="cart-empty-state">
+          <div class="empty-cart-icon-box">
             <i class="fa-solid fa-bag-shopping"></i>
           </div>
-          <h4>Your Bag is Empty</h4>
-          <p>Treat your palate to authentic Awadhi, Mughlai & Chettinad culinary signatures.</p>
-          <a href="menu.html" class="cart-browse-btn" onclick="const d = document.getElementById('cartDrawer'); if(d) d.classList.remove('open'); const ov = document.getElementById('cartOverlay'); if(ov) ov.classList.remove('show');">
-            <i class="fa-solid fa-utensils"></i> Browse Signature Menu
+          <h4>Your Cart is Empty</h4>
+          <p>You haven't selected any dishes yet. Treat yourself to our 30 chef-curated signature creations!</p>
+          <a href="menu.html" class="btn-browse-menu" onclick="document.getElementById('cartClose')?.click()">
+            <i class="fa-solid fa-utensils"></i> Explore Royal Menu
           </a>
         </div>
       `;
@@ -508,77 +482,101 @@ function initCartSystem() {
       if (totalWrap) {
         totalWrap.textContent = '₹0';
       }
-      const grandTotalEl = qs('#cartGrandTotal');
-      if (grandTotalEl) grandTotalEl.textContent = '₹0';
-      const checkoutBtnPrice = qs('#cartCheckoutBtnPrice');
-      if (checkoutBtnPrice) checkoutBtnPrice.textContent = '₹0';
-
-      const footer = qs('#cartFooter');
-      if (footer) footer.style.display = 'none';
+      const subtotalEl = qs('#cartSubtotal');
+      if (subtotalEl) subtotalEl.textContent = '₹0';
+      if (perkBanner) perkBanner.innerHTML = '';
+      const footerEl = qs('#cartFooter');
+      if (footerEl) footerEl.style.opacity = '0.5';
 
       return;
 
     }
 
-    const footer = qs('#cartFooter');
-    if (footer) footer.style.display = 'flex';
+    const footerEl = qs('#cartFooter');
+    if (footerEl) footerEl.style.opacity = '1';
 
-    itemsWrap.innerHTML = cart.map(item => {
-      const lineTotal = item.price * item.qty;
-      const safeImg = item.img || item.image || 'images/dishes/hyderabadi_biryani.jpg';
-      return `
-        <div class="cart-item" data-name="${item.name}">
-          <div class="cart-item-img-wrap">
-            <img src="${safeImg}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='images/dishes/hyderabadi_biryani.jpg';">
-          </div>
-
-          <div class="cart-item-body">
-            <div class="cart-item-header-row">
-              <h4 title="${item.name}">${item.name}</h4>
-              <button class="cart-remove" data-name="${item.name}" aria-label="Remove item" title="Remove dish">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </div>
-
-            <div class="cart-item-meta-row">
-              <span class="cart-unit-price">₹${item.price} each</span>
-              <span class="cart-line-total">₹${lineTotal.toLocaleString('en-IN')}</span>
-            </div>
-
-            <div class="cart-item-actions-row">
-              <div class="cart-qty">
-                <button class="qty-minus" data-name="${item.name}" aria-label="Decrease quantity">
-                  <i class="fa-solid fa-minus"></i>
-                </button>
-                <span class="qty-count">${item.qty}</span>
-                <button class="qty-plus" data-name="${item.name}" aria-label="Increase quantity">
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    const total = cart.reduce(
+    const subtotal = cart.reduce(
       (sum, item) => sum + item.price * item.qty,
       0
     );
 
+    const freeDeliveryThreshold = 500;
+    const isFreeDelivery = subtotal >= freeDeliveryThreshold;
+    const diff = Math.max(0, freeDeliveryThreshold - subtotal);
+    const progressPct = Math.min(100, Math.round((subtotal / freeDeliveryThreshold) * 100));
+
+    if (perkBanner) {
+      if (isFreeDelivery) {
+        perkBanner.className = 'cart-perk-banner unlocked';
+        perkBanner.innerHTML = `
+          <div class="perk-text">
+            <i class="fa-solid fa-circle-check"></i>
+            <span><strong>FREE Express Delivery</strong> unlocked for this order!</span>
+          </div>
+          <div class="perk-bar"><div class="perk-fill" style="width: 100%;"></div></div>
+        `;
+      } else {
+        perkBanner.className = 'cart-perk-banner';
+        perkBanner.innerHTML = `
+          <div class="perk-text">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span>Add <strong>₹${diff}</strong> more for <strong>FREE Delivery</strong></span>
+          </div>
+          <div class="perk-bar"><div class="perk-fill" style="width: ${progressPct}%;"></div></div>
+        `;
+      }
+    }
+
+    itemsWrap.innerHTML = cart.map(item => `
+      <div class="cart-item-card">
+        <div class="ci-image-wrap">
+          <img src="${item.img || item.image || 'images/dishes/hyderabadi_biryani.jpg'}" 
+               alt="${item.name}" 
+               onerror="this.onerror=null;this.src='images/dishes/hyderabadi_biryani.jpg';">
+        </div>
+
+        <div class="ci-info-col">
+          <div class="ci-title-row">
+            <h4 class="ci-item-name" title="${item.name}">${item.name}</h4>
+            <button class="cart-remove ci-trash-btn" data-name="${item.name}" aria-label="Remove item" title="Remove ${item.name}">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </div>
+
+          <div class="ci-bottom-row">
+            <div class="ci-price-box">
+              <span class="ci-unit-price">₹${item.price}</span>
+              ${item.qty > 1 ? `<span class="ci-line-sum">Total ₹${item.price * item.qty}</span>` : ''}
+            </div>
+
+            <div class="cart-qty ci-stepper-pill">
+              <button class="qty-minus ci-step-btn" data-name="${item.name}" aria-label="Decrease quantity">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <span class="ci-qty-num">${item.qty}</span>
+              <button class="qty-plus ci-step-btn" data-name="${item.name}" aria-label="Increase quantity">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
     if (totalWrap) {
       totalWrap.textContent =
-        `₹${total.toLocaleString('en-IN')}`;
+        `₹${subtotal.toLocaleString('en-IN')}`;
     }
 
-    const grandTotalEl = qs('#cartGrandTotal');
-    if (grandTotalEl) {
-      grandTotalEl.textContent = `₹${total.toLocaleString('en-IN')}`;
+    const subtotalEl = qs('#cartSubtotal');
+    if (subtotalEl) {
+      subtotalEl.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
     }
 
-    const checkoutBtnPrice = qs('#cartCheckoutBtnPrice');
-    if (checkoutBtnPrice) {
-      checkoutBtnPrice.textContent = `₹${total.toLocaleString('en-IN')}`;
+    const deliveryEl = qs('#cartDeliveryFee');
+    if (deliveryEl) {
+      deliveryEl.textContent = isFreeDelivery ? 'FREE' : '₹50';
+      deliveryEl.className = isFreeDelivery ? 'free-tag' : '';
     }
 
     bindCartActions();

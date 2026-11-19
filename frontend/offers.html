@@ -180,47 +180,44 @@
 </div>
 
 <!-- ===== CART DRAWER ===== -->
-<div class="cart-drawer" id="cartDrawer" aria-label="Shopping Cart">
+<div class="cart-drawer" id="cartDrawer">
   <div class="cart-header">
-    <div class="cart-header-left">
-      <span class="cart-header-icon"><i class="fa-solid fa-bag-shopping"></i></span>
+    <div class="cart-header-title">
+      <div class="cart-bag-icon">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </div>
       <div>
-        <h3 class="cart-header-title">Your Cart</h3>
-        <span class="cart-count-badge" id="cartDrawerCount">0 items</span>
+        <h3>Your Cart</h3>
+        <span class="cart-items-count-tag" id="cartHeaderCount">0 dishes</span>
       </div>
     </div>
     <button id="cartClose" aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
   </div>
-
-  <div id="cartDeliveryProgress" class="cart-delivery-progress-wrap"></div>
-
   <div class="cart-items" id="cartItems"></div>
-
   <div class="cart-footer" id="cartFooter">
-    <div class="cart-summary-breakdown">
-      <div class="cart-summary-row">
-        <span>Subtotal</span>
-        <strong id="cartTotal">₹0</strong>
+    <div class="cart-bill-summary">
+      <div class="bill-row">
+        <span>Items Subtotal</span>
+        <strong id="cartSubtotal">₹0</strong>
       </div>
-      <div class="cart-summary-row highlight">
-        <span>Total Amount</span>
-        <strong class="cart-grand-total" id="cartGrandTotal">₹0</strong>
+      <div class="bill-row">
+        <span>Delivery Fee</span>
+        <strong id="cartDeliveryFee" class="free-tag">FREE</strong>
       </div>
     </div>
-
-    <a href="orders.html" class="cart-checkout-btn">
-      <span class="btn-text">Proceed to Checkout</span>
-      <span class="btn-price-pill">
-        <span id="cartCheckoutBtnPrice">₹0</span>
-        <i class="fa-solid fa-arrow-right"></i>
-      </span>
+    <div class="cart-total-bar">
+      <div class="total-label-col">
+        <span class="total-title">Total</span>
+        <span class="tax-note">Incl. taxes & packaging</span>
+      </div>
+      <span class="total-value" id="cartTotal">₹0</span>
+    </div>
+    <a href="orders.html" class="cart-checkout-btn" id="cartProceedBtn">
+      <i class="fa-solid fa-lock"></i>
+      <span>Proceed to Checkout</span>
+      <i class="fa-solid fa-arrow-right cart-arrow"></i>
     </a>
-
-    <div class="cart-view-full-wrap">
-      <a href="cart.html" class="cart-view-full-link">
-        <i class="fa-solid fa-sliders"></i> View Full Bag & Apply Coupons
-      </a>
-    </div>
+    <a href="cart.html" class="cart-full-link">View Cart & Apply Coupons</a>
   </div>
 </div>
 <!-- CART OVERLAY -->
