@@ -99,7 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (nameInput && user.name) nameInput.value = user.name;
                     if (emailInput && user.email) emailInput.value = user.email;
                     if (phoneInput && user.phone) phoneInput.value = user.phone;
-                    if (addressInput && user.address) addressInput.value = user.address;
+                    if (addressInput && user.address) {
+                        addressInput.value = user.address.replace(/\\+/g, '/').replace(/\/+/g, '/').trim();
+                    }
                 }
             } catch (err) {
                 console.error('Error parsing user data for checkout prefill:', err);

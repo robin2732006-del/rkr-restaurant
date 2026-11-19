@@ -772,52 +772,71 @@ textarea{
 }
 
 .coupon-box{
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 5px 6px 5px 16px;
+  margin: 22px 0 20px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-  display:flex;
-  gap:12px;
-
-  margin:26px 0;
-
+.coupon-box:focus-within {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.18), inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .coupon-box input{
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  padding: 10px 8px 10px 0 !important;
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
 
-  flex:1;
-
-  background:rgba(255,255,255,0.05);
-
-  border:1px solid rgba(255,255,255,0.08);
-
-  border-radius:16px;
-
-  padding:16px;
-
-  color:#fff;
-
+.coupon-box input::placeholder {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 0.82rem;
 }
 
 .coupon-box button{
-
-  padding:0 24px;
-
-  border-radius:16px;
-
-  background:var(--primary);
-
-  color:#fff;
-
-  font-weight:600;
-
-  cursor:pointer;
-
-  transition:.3s;
-
+  height: 42px;
+  min-height: 42px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary) 0%, #ff5100 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.35);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .coupon-box button:hover{
+  background: linear-gradient(135deg, #ff8c1a 0%, #ff5a0a 100%);
+  box-shadow: 0 6px 20px rgba(255, 122, 0, 0.5);
+  transform: translateY(-1px);
+}
 
-  background:#ff5100;
-
+.coupon-box button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(255, 122, 0, 0.3);
 }
 
 .summary-total{
@@ -857,45 +876,38 @@ textarea{
 }
 
 .payment-option{
-
-  padding:18px 20px;
-
-  border-radius:20px;
-
-  border:1px solid rgba(255,255,255,0.08);
-
-  background:rgba(255,255,255,0.04);
-
-  display:flex;
-  align-items:center;
-  gap:14px;
-
-  cursor:pointer;
-
-  transition:.3s;
-
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+  user-select: none;
 }
 
 .payment-option.active{
-
-  border-color:rgba(255,122,0,0.4);
-
-  background:rgba(255,122,0,0.12);
-
+  border-color: var(--primary);
+  background: rgba(255, 122, 0, 0.12);
+  box-shadow: 0 4px 18px rgba(255, 122, 0, 0.2);
 }
 
 .payment-option:hover{
-
-  transform:translateY(-4px);
-
+  border-color: rgba(255, 122, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 .payment-option i{
-
-  color:var(--primary);
-
-  font-size:1.1rem;
-
+  color: var(--primary);
+  font-size: 1.25rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 /* ================= PLACE ORDER ================= */
@@ -1124,9 +1136,21 @@ textarea{
   }
 
   .coupon-box{
+    display: flex;
+    flex-direction: row;
+    padding: 4px 5px 4px 14px;
+    gap: 8px;
+  }
 
-    flex-direction:column;
+  .coupon-box input{
+    font-size: 0.82rem;
+  }
 
+  .coupon-box button{
+    height: 38px;
+    min-height: 38px;
+    padding: 0 16px;
+    font-size: 0.82rem;
   }
 
   .summary-total h3{
@@ -1255,20 +1279,60 @@ body.light .order-item-remove:hover {
   color: #ffffff;
 }
 
-body.light .payment-opt {
-  border: 1px solid rgba(0, 0, 0, 0.08);
+body.light .payment-option {
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
   background: rgba(0, 0, 0, 0.02);
+  color: #18130c;
 }
 
-body.light .payment-opt.active {
+body.light .payment-option.active {
   border-color: var(--primary);
-  background: rgba(255, 122, 0, 0.05);
+  background: rgba(255, 122, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(255, 122, 0, 0.12);
+}
+
+body.light .payment-option i {
+  color: var(--primary);
+}
+
+body.light .coupon-box {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+body.light .coupon-box:focus-within {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.14);
 }
 
 body.light .coupon-box input {
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #18130c !important;
+}
+
+body.light .coupon-box input::placeholder {
+  color: #8c827a;
+}
+
+body.light .summary-line {
+  color: #554d42;
+}
+
+body.light .summary-line strong {
   color: #18130c;
+}
+
+body.light .summary-total {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light .summary-total span {
+  color: #18130c;
+}
+
+body.light .summary-total h3 {
+  color: var(--primary);
 }
 
 body.light .divider-line {

@@ -172,7 +172,7 @@ body{
 
 .login-form{
     width:100%;
-    max-width:270px;
+    max-width:360px;
 }
 
 .form-header h2{
@@ -253,9 +253,26 @@ body{
 .input-box input:-webkit-autofill:hover,
 .input-box input:-webkit-autofill:focus,
 .input-box input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 1000px var(--form-input-bg) inset !important;
+    -webkit-box-shadow: 0 0 0 1000px #161822 inset !important;
     -webkit-text-fill-color: var(--form-input-color) !important;
     transition: background-color 5000s ease-in-out 0s;
+}
+
+body.light .input-box input:-webkit-autofill,
+body.light .input-box input:-webkit-autofill:hover,
+body.light .input-box input:-webkit-autofill:focus,
+body.light .input-box input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #222222 !important;
+}
+
+/* Hide duplicate native browser password eye icons */
+input::-webkit-credentials-auto-fill-button,
+input::-ms-reveal,
+input::-ms-clear {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
 }
 
 .toggle-password{

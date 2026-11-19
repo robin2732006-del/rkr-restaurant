@@ -23,7 +23,7 @@ async function signupUser(){
 
     const name = document.getElementById("name").value.trim();
 
-    const email = document.getElementById("email").value.trim();
+    const email = document.getElementById("email").value.trim().toLowerCase();
 
     const password = document.getElementById("password").value;
 

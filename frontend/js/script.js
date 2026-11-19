@@ -227,39 +227,51 @@ function initMobileNav() {
   if (!hamburger || !navLinks) return;
 
   const openNav = () => {
-
     navLinks.classList.add('open');
     backdrop?.classList.add('show');
     hamburger.classList.add('open');
-
     document.body.style.overflow = 'hidden';
-
   };
 
   const closeNav = () => {
-
     navLinks.classList.remove('open');
     backdrop?.classList.remove('show');
     hamburger.classList.remove('open');
-
     document.body.style.overflow = '';
-
   };
 
-  hamburger.addEventListener('click', () => {
-
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
     if (navLinks.classList.contains('open')) {
       closeNav();
     } else {
       openNav();
     }
-
   });
 
+  // Touch & click dismiss on backdrop
   backdrop?.addEventListener('click', closeNav);
+  backdrop?.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    closeNav();
+  }, { passive: false });
 
-  qsa('.nav-link', navLinks).forEach(link => {
-    link.addEventListener('click', closeNav);
+  // Touch anywhere outside the drawer / on the side to dismiss
+  const handleOutsideInteraction = (e) => {
+    if (navLinks.classList.contains('open')) {
+      if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+        closeNav();
+      }
+    }
+  };
+  document.addEventListener('touchstart', handleOutsideInteraction, { passive: true });
+  document.addEventListener('click', handleOutsideInteraction);
+
+  // Close when tapping any link or button inside the drawer
+  navLinks.addEventListener('click', (e) => {
+    if (e.target.closest('a') || e.target.closest('button')) {
+      closeNav();
+    }
   });
 
   document.addEventListener('keydown', e => {
@@ -926,6 +938,11 @@ function initNavSpy() {
    ============================================================ */
 
 function initSmoothScroll() {
+  const getTargetScrollPos = (target) => {
+    const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 75;
+    return target.getBoundingClientRect().top + window.pageYOffset - headerH;
+  };
+
   qsa('a').forEach(link => {
     const href = link.getAttribute('href');
     if (!href) return;
@@ -940,7 +957,7 @@ function initSmoothScroll() {
           link.addEventListener('click', e => {
             e.preventDefault();
             window.scrollTo({
-              top: target.offsetTop - 80,
+              top: getTargetScrollPos(target),
               behavior: 'smooth'
             });
             history.pushState(null, null, targetUrl.hash);
@@ -954,7 +971,7 @@ function initSmoothScroll() {
           link.addEventListener('click', e => {
             e.preventDefault();
             window.scrollTo({
-              top: target.offsetTop - 80,
+              top: getTargetScrollPos(target),
               behavior: 'smooth'
             });
             history.pushState(null, null, href);
@@ -962,25 +979,27 @@ function initSmoothScroll() {
         }
       }
     }
-  });
+  }); 
 
-  // Handle hash on page load (e.g. going to menu.html#categories)
+  // Handle hash on page load (e.g. going to menu.html#menu or menu.html#categories)
   if (window.location.hash) {
     const hash = window.location.hash;
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
+    const scrollToTarget = () => {
+      const target = qs(hash);
+      if (target) {
+        window.scrollTo({
+          top: getTargetScrollPos(target),
+          behavior: 'smooth'
+        });
+      }
+    };
+
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        const target = qs(hash);
-        if (target) {
-          window.scrollTo(0, 0);
-          window.scrollTo({
-            top: target.offsetTop - 80,
-            behavior: 'smooth'
-          });
-        }
-      }, 1400); // Align with preloader fade-out to scroll when body overflow is enabled
+      setTimeout(scrollToTarget, 300);
+      setTimeout(scrollToTarget, 1400); // Align with preloader fade-out to scroll when body overflow is enabled
     });
   }
 }
@@ -1542,13 +1561,29 @@ async function initMenu() {
       if (!window.menuState.isExpanded) {
         const menu = qs('#menu');
         if (menu) {
+          const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 75;
           window.scrollTo({
-            top: menu.offsetTop - 100,
+            top: menu.getBoundingClientRect().top + window.pageYOffset - headerH,
             behavior: 'smooth'
           });
         }
       }
     });
+  }
+
+  // Smoothly scroll to hash destination once menu grid and layout are fully ready
+  if (window.location.hash) {
+    const hashTarget = qs(window.location.hash);
+    if (hashTarget) {
+      setTimeout(() => {
+        const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 75;
+        const targetTop = hashTarget.getBoundingClientRect().top + window.pageYOffset - headerH;
+        window.scrollTo({
+          top: targetTop,
+          behavior: 'smooth'
+        });
+      }, 250);
+    }
   }
 }
 
@@ -1850,8 +1885,9 @@ function initHomeVipProfile() {
   if (homeVipSubtitle) homeVipSubtitle.textContent = `${tier} Privileges Active • 10% Flat Savings with ROYAL10`;
   
   if (homeVipAddressText) {
-    if (user.address && user.address.trim()) {
-      homeVipAddressText.textContent = user.address.length > 25 ? user.address.slice(0, 25) + '…' : user.address;
+    const rawAddr = user.address ? user.address.replace(/\\+/g, '/').replace(/\/+/g, '/').trim() : '';
+    if (rawAddr) {
+      homeVipAddressText.textContent = rawAddr.length > 25 ? rawAddr.slice(0, 25) + '…' : rawAddr;
     } else {
       homeVipAddressText.textContent = 'Set primary address';
     }
@@ -2149,7 +2185,7 @@ function initProfileDashboard() {
     if (profPhone) profPhone.value = phone;
     if (profDob) profDob.value = dob;
     if (profBio) profBio.value = bio;
-    if (profAddress) profAddress.value = address;
+    if (profAddress) profAddress.value = (address || '').replace(/\\+/g, '/').replace(/\/+/g, '/').trim();
 
     // Spice Level
     const currentSpice = u.spiceLevel || 'Medium';
@@ -2272,7 +2308,7 @@ function initProfileDashboard() {
     const updatedPhone = profPhone?.value.trim() || '';
     const updatedDob = profDob?.value || '';
     const updatedBio = profBio?.value.trim() || '';
-    const updatedAddress = profAddress?.value.trim() || '';
+    const updatedAddress = (profAddress?.value || '').replace(/\\+/g, '/').replace(/\/+/g, '/').trim();
 
     const selectedSpice = qs('.spice-pill.selected')?.dataset.spice || 'Medium';
     const selectedDiet = Array.from(qsa('.diet-chip.selected')).map(c => c.dataset.pref);

@@ -149,7 +149,7 @@
 
             <div class="login-right">
 
-                <form class="login-form" id="loginForm" onsubmit="return false;">
+                <form class="login-form" id="loginForm" onsubmit="event.preventDefault(); loginUser();">
 
                     <div class="form-header">
 
@@ -165,7 +165,7 @@
 
                     <div class="input-group">
 
-                        <label>Email Address</label>
+                        <label for="email">Email Address</label>
 
                         <div class="input-box">
 
@@ -174,7 +174,12 @@
                             <input
                                 type="email"
                                 id="email"
+                                name="email"
+                                autocomplete="username"
+                                autocapitalize="none"
+                                spellcheck="false"
                                 placeholder="Enter your email"
+                                required
                             >
 
                         </div>
@@ -185,7 +190,7 @@
 
                     <div class="input-group">
 
-                        <label>Password</label>
+                        <label for="password">Password</label>
 
                         <div class="input-box password-box">
 
@@ -194,12 +199,16 @@
                             <input
                                 type="password"
                                 id="password"
+                                name="password"
+                                autocomplete="current-password"
                                 placeholder="Enter your password"
+                                required
                             >
 
                             <i
                                 class="fa-solid fa-eye toggle-password"
                                 onclick="togglePassword()"
+                                title="Toggle Password"
                             ></i>
 
                         </div>
@@ -212,7 +221,7 @@
 
                         <label class="remember">
 
-                            <input type="checkbox">
+                            <input type="checkbox" id="rememberMe">
 
                             Remember Me
 
@@ -227,9 +236,9 @@
                     <!-- BUTTON -->
 
                     <button
-                        type="button"
+                        type="submit"
                         class="login-btn"
-                        onclick="loginUser()"
+                        id="loginSubmitBtn"
                     >
                         Login Account
                     </button>

@@ -14,7 +14,7 @@ if (typeof getApiUrl !== 'function') {
 async function loginUser(){
 
     const email =
-    document.getElementById("email").value.trim();
+    document.getElementById("email").value.trim().toLowerCase();
 
     const password =
     document.getElementById("password").value;
