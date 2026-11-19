@@ -78,87 +78,246 @@ document.addEventListener("DOMContentLoaded", () => {
     const address =
         $("#success-address");
 
+    const defaultInitialAddress = "58, K N Palayam Road, Periya Kodeveri, Gobi, Erode";
+
     if (address) {
         address.textContent =
-            lastOrder?.deliveryInfo?.address || lastOrder?.address || "Address not provided";
+            lastOrder?.deliveryInfo?.address || lastOrder?.address || defaultInitialAddress;
     }
 
     /* =========================================================
-       CHANGE DELIVERY ADDRESS HANDLER
+       CHANGE DELIVERY ADDRESS MODAL HANDLER
     ========================================================= */
-    const changeBtn = $(".change-btn");
-    if (changeBtn && address) {
-        changeBtn.addEventListener("click", async (e) => {
+    const changeBtn = $("#changeAddressBtn") || $(".change-btn");
+    const addressModal = $("#addressModal");
+    const closeAddressModal = $("#closeAddressModal");
+    const cancelAddressBtn = $("#cancelAddressBtn");
+    const saveAddressBtn = $("#saveAddressBtn");
+    const modalAddressInput = $("#modalAddressInput");
+    const modalAddressAlert = $("#modalAddressAlert");
+    const presetChips = $$(".preset-chip");
+
+    function openAddressModal() {
+        if (!addressModal) return;
+        const currentAddr = address ? address.textContent.trim() : "";
+        if (modalAddressInput) {
+            modalAddressInput.value = (currentAddr && currentAddr !== "Address not provided") ? currentAddr : defaultInitialAddress;
+        }
+        if (modalAddressAlert) modalAddressAlert.style.display = "none";
+        addressModal.classList.add("active");
+        addressModal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        setTimeout(() => modalAddressInput && modalAddressInput.focus(), 150);
+    }
+
+    function closeAddressModalFunc() {
+        if (!addressModal) return;
+        addressModal.classList.remove("active");
+        addressModal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+    }
+
+    if (changeBtn) {
+        changeBtn.addEventListener("click", (e) => {
+            e.preventDefault();
             e.stopPropagation();
-            const currentAddress = address.textContent.trim();
-            const defaultPrompt = (currentAddress && currentAddress !== "Address not provided") ? currentAddress : "";
-            
-            const newAddress = window.prompt("📍 Enter updated delivery address for this order:", defaultPrompt);
-            
-            if (newAddress !== null && newAddress.trim() !== "") {
-                const trimmed = newAddress.trim();
-                address.textContent = trimmed;
-                
-                // 1. Update in local storage
-                try {
-                    let orderData = JSON.parse(localStorage.getItem("last-order")) || {};
-                    if (!orderData.deliveryInfo) orderData.deliveryInfo = {};
-                    orderData.deliveryInfo.address = trimmed;
-                    orderData.address = trimmed;
-                    localStorage.setItem("last-order", JSON.stringify(orderData));
-                } catch (err) {
-                    console.error("Local storage address update error:", err);
-                }
+            openAddressModal();
+        });
+    }
 
-                // 2. Update on server if order ID exists
-                try {
-                    const orderDbId = lastOrder?._id || lastOrder?.id;
-                    if (orderDbId && !orderDbId.toString().startsWith("#")) {
-                        const apiBase = (typeof getApiUrl === "function") 
-                            ? getApiUrl(`/api/orders/${orderDbId}`) 
-                            : `/api/orders/${orderDbId}`;
-                        await fetch(apiBase, {
-                            method: "PUT",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ "deliveryInfo.address": trimmed, address: trimmed })
-                        }).catch(() => {});
-                    }
-                } catch (err) {
-                    console.error("Server order address update error:", err);
-                }
+    if (closeAddressModal) closeAddressModal.addEventListener("click", closeAddressModalFunc);
+    if (cancelAddressBtn) cancelAddressBtn.addEventListener("click", closeAddressModalFunc);
+    if (addressModal) {
+        addressModal.addEventListener("click", (e) => {
+            if (e.target === addressModal) closeAddressModalFunc();
+        });
+    }
 
-                // 3. Update user profile in database if logged in
-                try {
-                    const userData = JSON.parse(localStorage.getItem("user"));
-                    const token = userData?.token;
-                    if (token) {
-                        const profileUrl = (typeof getApiUrl === "function") 
-                            ? getApiUrl("/api/auth/profile") 
-                            : "/api/auth/profile";
-                        await fetch(profileUrl, {
-                            method: "PUT",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": `Bearer ${token}`
-                            },
-                            body: JSON.stringify({ address: trimmed })
-                        }).catch(() => {});
-                    }
-                } catch (err) {
-                    console.error("Profile address update error:", err);
-                }
+    presetChips.forEach(chip => {
+        chip.addEventListener("click", () => {
+            const preset = chip.getAttribute("data-addr");
+            if (preset && modalAddressInput) {
+                modalAddressInput.value = preset;
+                modalAddressInput.focus();
+            }
+        });
+    });
 
-                // Visual feedback: temporarily switch button to Saved!
-                const originalText = changeBtn.innerHTML;
-                changeBtn.innerHTML = '<i class="fa-solid fa-check"></i> Saved';
+    if (saveAddressBtn) {
+        saveAddressBtn.addEventListener("click", async () => {
+            const newAddress = modalAddressInput ? modalAddressInput.value.trim() : "";
+            if (!newAddress) {
+                if (modalAddressAlert) {
+                    modalAddressAlert.textContent = "Please enter a valid delivery address.";
+                    modalAddressAlert.style.display = "block";
+                }
+                return;
+            }
+
+            saveAddressBtn.disabled = true;
+            saveAddressBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+            if (address) address.textContent = newAddress;
+
+            // 1. Update in local storage
+            try {
+                let orderData = JSON.parse(localStorage.getItem("last-order")) || {};
+                if (!orderData.deliveryInfo) orderData.deliveryInfo = {};
+                orderData.deliveryInfo.address = newAddress;
+                orderData.address = newAddress;
+                localStorage.setItem("last-order", JSON.stringify(orderData));
+            } catch (err) {
+                console.error("Local storage address update error:", err);
+            }
+
+            // 2. Update on server if order ID exists
+            try {
+                const orderDbId = lastOrder?._id || lastOrder?.id;
+                if (orderDbId && !orderDbId.toString().startsWith("#")) {
+                    const apiBase = (typeof getApiUrl === "function") 
+                        ? getApiUrl(`/api/orders/${orderDbId}`) 
+                        : `/api/orders/${orderDbId}`;
+                    await fetch(apiBase, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ "deliveryInfo.address": newAddress, address: newAddress })
+                    }).catch(() => {});
+                }
+            } catch (err) {
+                console.error("Server order address update error:", err);
+            }
+
+            // 3. Update user profile in database if logged in
+            try {
+                const userData = JSON.parse(localStorage.getItem("user"));
+                const token = userData?.token;
+                if (token) {
+                    const profileUrl = (typeof getApiUrl === "function") 
+                        ? getApiUrl("/api/auth/profile") 
+                        : "/api/auth/profile";
+                    await fetch(profileUrl, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ address: newAddress })
+                    }).catch(() => {});
+                }
+            } catch (err) {
+                console.error("Profile address update error:", err);
+            }
+
+            saveAddressBtn.disabled = false;
+            saveAddressBtn.innerHTML = '<i class="fa-solid fa-check"></i> Saved!';
+
+            setTimeout(() => {
+                saveAddressBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Save Address</span>';
+                closeAddressModalFunc();
+            }, 600);
+
+            // Visual feedback on the trigger button
+            if (changeBtn) {
+                const orig = changeBtn.innerHTML;
+                changeBtn.innerHTML = '<i class="fa-solid fa-check"></i> Updated';
                 changeBtn.style.background = "linear-gradient(135deg, #22c55e, #16a34a)";
                 setTimeout(() => {
-                    changeBtn.innerHTML = originalText;
+                    changeBtn.innerHTML = orig;
                     changeBtn.style.background = "";
-                }, 2000);
+                }, 2500);
             }
         });
     }
+
+    /* =========================================================
+       SUPPORT CENTER MODAL (24/7 HELPLINE) HANDLER
+    ========================================================= */
+    const supportModal = $("#supportModal");
+    const needSupportBtn = $("#needSupportBtn") || $(".support-btn");
+    const closeSupportModal = $("#closeSupportModal");
+    const closeSupportBtn = $("#closeSupportBtn");
+    const copyPhoneBtn = $("#copyPhoneBtn");
+    const copyPhoneText = $("#copyPhoneText");
+    const supportOrderNum = $("#supportOrderNum");
+    const whatsappChannel = $("#whatsappChannel");
+    const emailChannel = $("#emailChannel");
+
+    const currentOrderIdText = (orderId && orderId.textContent.trim()) || "#RKR48291";
+    if (supportOrderNum) supportOrderNum.textContent = currentOrderIdText;
+
+    if (whatsappChannel) {
+        const waMsg = encodeURIComponent(`Hi RKR Support, I need assistance regarding my order ${currentOrderIdText}.`);
+        whatsappChannel.href = `https://wa.me/919876543210?text=${waMsg}`;
+    }
+
+    if (emailChannel) {
+        const mailSub = encodeURIComponent(`Support Assistance for Order ${currentOrderIdText}`);
+        const mailBody = encodeURIComponent(`Hello RKR Support Team,\n\nI need assistance with my live order ${currentOrderIdText}.\n\nThank you.`);
+        emailChannel.href = `mailto:support@rkrrestaurant.com?subject=${mailSub}&body=${mailBody}`;
+    }
+
+    function openSupportModal() {
+        if (!supportModal) return;
+        supportModal.classList.add("active");
+        supportModal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeSupportModalFunc() {
+        if (!supportModal) return;
+        supportModal.classList.remove("active");
+        supportModal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+    }
+
+    if (needSupportBtn) {
+        needSupportBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openSupportModal();
+        });
+    }
+
+    if (closeSupportModal) closeSupportModal.addEventListener("click", closeSupportModalFunc);
+    if (closeSupportBtn) closeSupportBtn.addEventListener("click", closeSupportModalFunc);
+    if (supportModal) {
+        supportModal.addEventListener("click", (e) => {
+            if (e.target === supportModal) closeSupportModalFunc();
+        });
+    }
+
+    if (copyPhoneBtn) {
+        copyPhoneBtn.addEventListener("click", async () => {
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText("+919876543210");
+                } else {
+                    const tempInput = document.createElement("input");
+                    tempInput.value = "+919876543210";
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                }
+                if (copyPhoneText) copyPhoneText.textContent = "Copied!";
+                copyPhoneBtn.classList.add("copied");
+                setTimeout(() => {
+                    if (copyPhoneText) copyPhoneText.textContent = "Copy";
+                    copyPhoneBtn.classList.remove("copied");
+                }, 2000);
+            } catch (err) {
+                console.warn("Clipboard copy fallback:", err);
+            }
+        });
+    }
+
+    // Keyboard ESC listener for both modals
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            closeAddressModalFunc();
+            closeSupportModalFunc();
+        }
+    });
 
     /* ==========================
        ORDER ITEMS
@@ -261,58 +420,56 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================== */
 
     const updates = [
-
         {
-            text: "Order confirmed",
-            progress: 25
+            text: "Order Confirmed & Placed",
+            progress: 0,
+            activeStep: 0
         },
-
         {
-            text: "Preparing meal",
-            progress: 50
+            text: "Preparing Your Meal in Kitchen",
+            progress: 33.33,
+            activeStep: 1
         },
-
         {
-            text: "Packed successfully",
-            progress: 75
+            text: "Valet Assigned • On The Way",
+            progress: 66.66,
+            activeStep: 2
         },
-
         {
-            text: "Out for delivery",
-            progress: 100
+            text: "Order Delivered Safely • Enjoy!",
+            progress: 100,
+            activeStep: 3
         }
     ];
 
-    let step = 0;
+    function applyTrackerStep(idx) {
+        if (idx < 0 || idx >= updates.length) return;
+        const u = updates[idx];
 
-    function updateTracker() {
-
-        if (step >= updates.length)
-            return;
-
-        const update =
-            updates[step];
-
-        if (liveText)
-            liveText.textContent =
-                update.text;
-
-        if (trackerProgress)
-            trackerProgress.style.width =
-                `${update.progress}%`;
-
-        if (trackerSteps[step]) {
-            trackerSteps[step]
-                .classList.add("active");
+        if (liveText) {
+            liveText.textContent = u.text;
         }
 
-        step++;
+        if (trackerProgress) {
+            trackerProgress.style.width = `${u.progress}%`;
+        }
+
+        trackerSteps.forEach((s, i) => {
+            if (i <= u.activeStep) {
+                s.classList.add("active");
+            } else {
+                s.classList.remove("active");
+            }
+        });
     }
 
-    setTimeout(updateTracker, 1500);
-    setTimeout(updateTracker, 4500);
-    setTimeout(updateTracker, 7500);
-    setTimeout(updateTracker, 10500);
+    // Step 0 active on load
+    applyTrackerStep(0);
+
+    // Natural progression across cooking, dispatch, and delivery
+    setTimeout(() => applyTrackerStep(1), 2500);
+    setTimeout(() => applyTrackerStep(2), 6500);
+    setTimeout(() => applyTrackerStep(3), 10500);
 
     /* ==========================
        CARD ANIMATION

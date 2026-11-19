@@ -320,11 +320,11 @@
 
             <div class="tracker-wrapper">
 
-                <div class="tracker-line"></div>
+                <div class="tracker-line">
+                    <div class="tracker-progress"></div>
+                </div>
 
-                <div class="tracker-progress"></div>
-
-                <!-- STEP -->
+                <!-- STEP 1 -->
 
                 <div class="tracker-step active">
 
@@ -340,9 +340,9 @@
 
                 </div>
 
-                <!-- STEP -->
+                <!-- STEP 2 -->
 
-                <div class="tracker-step active">
+                <div class="tracker-step">
 
                     <div class="tracker-icon">
 
@@ -356,7 +356,7 @@
 
                 </div>
 
-                <!-- STEP -->
+                <!-- STEP 3 -->
 
                 <div class="tracker-step">
 
@@ -372,7 +372,7 @@
 
                 </div>
 
-                <!-- STEP -->
+                <!-- STEP 4 -->
 
                 <div class="tracker-step">
 
@@ -409,12 +409,14 @@
                     </span>
 
                     <p id="success-address">
-                        24 Premium Street, Chennai, Tamil Nadu
+                        58, K N Palayam Road, Periya Kodeveri, Gobi, Erode
                     </p>
 
                 </div>
 
-                <button class="change-btn">
+                <button class="change-btn" id="changeAddressBtn" type="button">
+
+                    <i class="fa-solid fa-pen-to-square"></i>
 
                     Change
 
@@ -600,18 +602,141 @@
 
                 </div>
 
-                <a href="tel:+919876543210"
-                    class="support-btn">
+                <button type="button" class="support-btn" id="needSupportBtn">
 
-                    <i class="fa-solid fa-phone"></i>
+                    <i class="fa-solid fa-headset"></i>
 
-                    Call Support
+                    Need Support
 
-                </a>
+                </button>
 
             </div>
 
         </section>
+
+        <!-- =========================================================
+           UPDATE DELIVERY ADDRESS MODAL
+        ========================================================== -->
+        <div class="rkr-modal-backdrop" id="addressModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="rkr-modal-card">
+                <div class="rkr-modal-header">
+                    <div class="rkr-modal-title" id="modalTitle">
+                        <div class="modal-title-icon">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <h4>Update Delivery Address</h4>
+                            <span>Change the drop-off location for this order</span>
+                        </div>
+                    </div>
+                    <button type="button" class="rkr-modal-close" id="closeAddressModal" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                
+                <div class="rkr-modal-body">
+                    <label class="modal-label" for="modalAddressInput">Delivery Address</label>
+                    <div class="modal-input-wrap">
+                        <textarea id="modalAddressInput" rows="3" placeholder="Enter door/flat no, street, landmark, area, city, pincode" required></textarea>
+                    </div>
+                    
+                    <div class="modal-presets">
+                        <span class="preset-label">Quick select:</span>
+                        <button type="button" class="preset-chip" data-addr="58, K N Palayam Road, Periya Kodeveri, Gobi, Erode">
+                            <i class="fa-solid fa-house"></i> Home (Erode)
+                        </button>
+                        <button type="button" class="preset-chip" data-addr="12, Anna Salai, T. Nagar, Chennai, Tamil Nadu 600017">
+                            <i class="fa-solid fa-building"></i> Office (Chennai)
+                        </button>
+                    </div>
+                    
+                    <div class="modal-alert" id="modalAddressAlert" style="display:none;"></div>
+                </div>
+                
+                <div class="rkr-modal-footer">
+                    <button type="button" class="modal-btn-cancel" id="cancelAddressBtn">Cancel</button>
+                    <button type="button" class="modal-btn-save" id="saveAddressBtn">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Save Address</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================
+           SUPPORT CENTER MODAL (24/7 HELPLINE)
+        ========================================================== -->
+        <div class="rkr-modal-backdrop" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
+            <div class="rkr-modal-card support-modal-card">
+                <div class="rkr-modal-header">
+                    <div class="rkr-modal-title" id="supportModalTitle">
+                        <div class="modal-title-icon support-head-icon">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <div>
+                            <h4>RKR Support Center</h4>
+                            <span>Live assistance for <span id="supportOrderNum">#RKR</span></span>
+                        </div>
+                    </div>
+                    <button type="button" class="rkr-modal-close" id="closeSupportModal" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                
+                <div class="rkr-modal-body">
+                    <div class="support-channels">
+                        <!-- Direct Call -->
+                        <a href="tel:+919876543210" class="support-channel-card" id="directCallChannel">
+                            <div class="channel-icon call-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div class="channel-info">
+                                <strong>Call Helpline (24/7)</strong>
+                                <span>+91 98765 43210 • Instant kitchen connection</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square channel-arrow"></i>
+                        </a>
+
+                        <!-- WhatsApp -->
+                        <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" class="support-channel-card whatsapp-channel" id="whatsappChannel">
+                            <div class="channel-icon wa-icon">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </div>
+                            <div class="channel-info">
+                                <strong>Chat on WhatsApp</strong>
+                                <span>Instant live assistant & valet tracking</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square channel-arrow"></i>
+                        </a>
+
+                        <!-- Email -->
+                        <a href="mailto:support@rkrrestaurant.com" class="support-channel-card email-channel" id="emailChannel">
+                            <div class="channel-icon mail-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div class="channel-info">
+                                <strong>Email Support Desk</strong>
+                                <span>support@rkrrestaurant.com • Reply within 15 mins</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square channel-arrow"></i>
+                        </a>
+                    </div>
+
+                    <!-- Direct copy number bar for desktop/tablet -->
+                    <div class="copy-number-bar">
+                        <span>Helpline: <strong>+91 98765 43210</strong></span>
+                        <button type="button" class="copy-num-btn" id="copyPhoneBtn">
+                            <i class="fa-regular fa-copy"></i>
+                            <span id="copyPhoneText">Copy</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="rkr-modal-footer">
+                    <button type="button" class="modal-btn-cancel" id="closeSupportBtn" style="width:100%; text-align:center;">Close</button>
+                </div>
+            </div>
+        </div>
 
     </main>
 
