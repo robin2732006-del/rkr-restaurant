@@ -13,7 +13,12 @@ const Food = require('./models/Food');
 // Load environment variables
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://robink742006_db_user:Robin74762006@cluster0.ktposdu.mongodb.net/rkr_restaurant?retryWrites=true&w=majority';
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error("❌ MONGO_URI environment variable is missing in .env file.");
+  process.exit(1);
+}
 
 // Load static menu items dynamically from menuData.js
 global.window = {};
